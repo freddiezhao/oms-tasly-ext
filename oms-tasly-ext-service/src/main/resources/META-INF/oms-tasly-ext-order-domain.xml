@@ -1,0 +1,566 @@
+<types xmlns="http://www.hybris.com/schema/ondemand/domain"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/onpremise/domain http://www.hybris.com/schema/onpremise/domain-5.3.xsd"
+	package="tasly.greathealth.oms.domain.order">
+
+	<enumerations>
+		<enumeration code="PackingType">
+			<values>
+				<value code="PACKING" />
+				<value code="PACKED" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="DeliveryServiceType">
+			<values>
+				<value code="EXPRESS" />
+				<value code="EMS" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="ChannelSource">
+			<values>
+				<value code="TMALL" />
+				<value code="JD" />
+				<value code="GREATHEALTH" />
+				<value code="YHD" />
+				<value code="AMAZON" />
+				<value code="SUNING" />
+				<value code="CCB" />
+				<value code="ICBC" />
+				<value code="CCTV" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="InnerSource">
+			<values>
+				<value code="JSC" />
+				<value code="OTC" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="ShippingLockStatus">
+			<values>
+				<value code="NON_LOCK" />
+				<value code="PENDING_LOCK" />
+				<value code="LOCK_SUCCESS" />
+				<value code="LOCK_FAILED" />
+				<value code="PENDING_UNLOCK" />
+				<value code="UNLOCK_FAILED" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="ShadInfoUpdateStatus">
+			<values>
+				<value code="DEFAULT" />
+				<value code="REQ_MODIFY" />
+				<value code="REQ_FAILED" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="SpecialMemoUpdateStatus">
+			<values>
+				<value code="DEFAULT" />
+				<value code="REQ_MODIFY" />
+				<value code="REQ_FAILED" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="ApproveStatus">
+			<values>
+				<value code="DEFAULT" />
+				<value code="APPROVED" />
+				<value code="PROCESSING" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="EventType">
+			<values>
+				<value code="ORDERCREATE" />
+				<value code="SELLERSHIP" />
+				<value code="REFUNDCREATE" />
+				<value code="REFUNDSELLERAGREE" />
+				<value code="REFUNDSELLERREFUSE" />
+				<value code="REFUNDSUCCESS" />
+				<value code="REFUNDCLOSE" />
+				<value code="TESTCANCELSHIPMENT" />
+				<value code="UPDATEORDERMEMO" />
+				<value code="UPDATEORDERPRICE" />
+				<value code="LOGISTICSCHANGED" />
+			</values>
+		</enumeration>
+	
+		<enumeration code="OrderState">
+			<values>
+				<value code="FAIL" />
+				<value code="PENDING" />
+				<value code="PROCESSED" />
+				<value code="SUCCESS" />
+			</values>
+		</enumeration>
+	</enumerations>
+
+	<managedobjects>
+		<managedobject code="TaslyOrderData" extends="OrderData">
+			<attributes>
+				<attribute name="payment" type="Double">
+					<description>
+						实付金额
+					</description>
+				</attribute>
+				<!-- 2015.03.09  total_payment,o2o_delivery,order_created_time are added by handong -->
+				<attribute name="order_created_time" type="Date">
+					<description>
+						第三方平台订单创建时间
+					</description>
+				</attribute>
+				<attribute name="merchant_tag" type="String">
+					<persistence length="1280" />
+					<description>
+						商户标记：自营/外租/混合
+					</description>
+				</attribute>
+				<attribute name="express_memo" type="String">
+					<persistence length="1280" />
+					<description>
+						物流备注
+					</description>
+				</attribute>
+				<attribute name="packing" type="PackingType">
+					<defaultvalue>0</defaultvalue>
+					<description>
+						拨次
+					</description>
+				</attribute>
+				<attribute name="nick_name" type="String">
+					<persistence length="35" />
+					<description>
+						买家昵称
+					</description>
+				</attribute>
+				<attribute name="invoice_name" type="String">
+					<persistence length="80" />
+					<description>
+						发票抬头
+					</description>
+				</attribute>
+				<attribute name="invoice_type" type="String">
+					<persistence length="8" />
+					<description>
+						发票类型
+					</description>
+				</attribute>
+				<attribute name="invoice_content" type="String">
+					<persistence length="128" />
+					<description>
+						发票内容
+					</description>
+				</attribute>
+				<attribute name="delivery_service" type="DeliveryServiceType">
+					<description>
+						配送方式
+					</description>
+				</attribute>
+				<attribute name="discount_fee" type="Double">
+					<description>
+						订单折扣
+					</description>
+				</attribute>
+				<attribute name="total_price" type="Double">
+					<description>
+						订单总价
+					</description>
+				</attribute>
+				<attribute name="payment_point_amount" type="Double">
+					<description>
+						积分支付额度
+					</description>
+				</attribute>
+				<attribute name="buyer_message" type="String">
+					<description>
+						买家说明信息
+					</description>
+				</attribute>
+				<attribute name="seller_message" type="String">
+					<description>
+						卖家说明信息
+					</description>
+				</attribute>
+				<attribute name="special_memo" type="String">
+					<description>
+						特殊备注
+					</description>
+				</attribute>
+				<attribute name="special_memo_reason" type="String">
+					<persistence length="1" />
+					<description>
+						特殊备注原因
+					</description>
+				</attribute>
+				<attribute name="confirm_received_time" type="Date">
+					<description>
+						确认收货时间
+					</description>
+				</attribute>
+				<attribute name="channel_source" type="ChannelSource">
+					<description>
+						渠道来源
+					</description>
+				</attribute>
+				<attribute name="inner_source" type="InnerSource">
+					<description>
+						业态
+					</description>
+				</attribute>
+				<attribute name="shipping_lock_status" type="ShippingLockStatus">
+					<description>
+						发货锁定标记
+					</description>
+				</attribute>
+				<attribute name="shad_city" type="String">
+					<persistence length="64" />
+					<description>
+						收货人地址：市
+					</description>
+				</attribute>
+				<attribute name="shad_citydistrict" type="String">
+					<persistence length="64" />
+					<description>
+						收货人地址：区／县
+					</description>
+				</attribute>
+				<attribute name="shad_info_update_status" type="ShadInfoUpdateStatus">
+					<description>
+						订单收货人信息修改状态
+					</description>
+				</attribute>
+				<attribute name="special_memo_update_status" type="SpecialMemoUpdateStatus">
+					<description>
+						特殊备注信息修改状态
+					</description>
+				</attribute>
+				<attribute name="original_order_id" type="String">
+					<persistence length="35" />
+					<description>
+						商户订单号
+					</description>
+				</attribute>
+				<attribute name="approve_status" type="ApproveStatus">
+					<defaultvalue>0</defaultvalue>
+					<description>
+						审核标示
+					</description>
+				</attribute>
+				<attribute name="payment_no" type="String">
+					<persistence length="64" />
+					<description>
+						支付交易号
+					</description>
+				</attribute>
+				<attribute name="shad_mobile" type="String">
+					<persistence length="64" />
+					<description>
+						收货人手机号
+					</description>
+				</attribute>
+				<attribute name="replication_status" type="String">
+					<persistence length="1" />
+					<description>
+						ECC同步订单状态
+					</description>
+				</attribute>
+				<attribute name="replication_times" type="Integer">
+					<description>
+						ECC同步订单次数
+					</description>
+				</attribute>
+				<attribute name="ecc_taxpayer_number" type="String">
+					<persistence length="30" />
+					<description>
+						专票纳税人登记号
+					</description>
+				</attribute>
+				<attribute name="ecc_bank_name" type="String">
+					<persistence length="80" />
+					<description>
+						专票银行名称
+					</description>
+				</attribute>
+				<attribute name="ecc_bank_number" type="String">
+					<persistence length="30" />
+					<description>
+						专票银行账号
+					</description>
+				</attribute>
+				<attribute name="ecc_customer_address" type="String">
+					<persistence length="80" />
+					<description>
+						专票客户地址
+					</description>
+				</attribute>
+				<attribute name="ecc_customer_phone" type="String">
+					<persistence length="18" />
+					<description>
+						专票客户电话
+					</description>
+				</attribute>	
+				<attribute name="ecc_order_id" type="String">
+					<persistence length="35" />
+					<description>
+						ECC订单ID
+					</description>
+				</attribute>
+				<attribute name="ecc_modification_status" type="String">
+					<persistence length="20" />
+					<description>
+						ECC修改订单状态
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="TaslyOrderLineData" extends="OrderLineData">
+			<attributes>
+				<attribute name="third_party_orderline_id" type="String">
+					<persistence length="64" />
+					<description>
+						淘宝订单行项目ID
+					</description>
+				</attribute>
+				<attribute name="basequantityunitcode" type="String">
+					<description>
+						单位
+					</description>
+				</attribute>
+				<attribute name="unit_discount_fee" type="Double">
+					<description>
+						单品折扣价格
+					</description>
+				</attribute>
+				<attribute name="gift_item_flag" type="String">
+					<persistence length="1" />
+					<description>
+						单品折扣价格
+					</description>
+				</attribute>
+				<attribute name="refundamount" type="Double">
+					<description>
+						退款金额
+					</description>
+				</attribute>
+				<attribute name="refundquantity" type="String">
+					<description>
+						退款数量
+					</description>
+				</attribute>
+				<attribute name="refundstatus" type="String">
+					<persistence length="128" />
+					<description>
+						退款、退货状态
+					</description>
+				</attribute>
+				<attribute name="orderlinePayment" type="Double">
+					<description>
+						子订单实付金额
+					</description>
+				</attribute>
+				<attribute name="refundflag" type="String">
+					<persistence length="15" />
+					<description>
+						退款标志
+					</description>
+				</attribute>
+			</attributes>
+			
+		</managedobject>
+
+		<managedobject code="TaslyOrderLineQuantityData"
+			extends="OrderLineQuantityData">
+			<attributes>
+				<attribute name="express_order_id" type="String">
+					<persistence length="64" />
+					<description>
+						快递运单号
+					</description>
+				</attribute>
+				<attribute name="express_code" type="String">
+					<persistence length="10" />
+					<description>
+						快递公司代码
+					</description>
+				</attribute>
+				<attribute name="refundstatus" type="String">
+					<persistence length="128" />
+					<description>
+						退款、退货状态
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="TaslyPaymentInfoData" extends="PaymentInfoData">
+			<attributes>
+				<attribute name="issuedate" type="Date">
+					<description>
+						支付时间
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="TaslyShippingAndHandlingData"
+			extends="ShippingAndHandlingData">
+			<attributes>
+				<attribute name="shpr_insurance" type="Double">
+					<description>
+						运费险
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="ExpressData" properties="true">
+			<persistence name="express" />
+			<attributes>
+				<attribute name="code" type="String">
+					<persistence length="10" />
+					<modifiers mandatory="true" unique="true" />
+					<description>
+						快递公司代码
+					</description>
+				</attribute>
+				<attribute name="name" type="String">
+					<persistence length="64" />
+					<description>
+						快递公司名称
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="ExpressItemsData" properties="true">
+			<persistence name="expressitems" />
+			<attributes>
+				<attribute name="channel_source" type="String">
+					<description>
+						渠道来源
+					</description>
+				</attribute>
+				<attribute name="inner_source" type="String">
+					<description>
+						业态类别
+					</description>
+				</attribute>
+				<attribute name="skuid" type="String">
+					<description>
+						商品sku
+					</description>
+				</attribute>
+				<attribute name="express_code" type="String">
+					<persistence length="64" />
+					<description>
+						快递公司代码
+					</description>
+				</attribute>
+				<!-- TS-1033 add by Jhm Begin -->
+				<attribute name="status" type="String">
+					<defaultvalue>ACTIVE</defaultvalue>
+					<description>
+						状态标识
+					</description>
+				</attribute>
+				<!-- TS-1033 add by Jhm End -->
+			</attributes>
+		</managedobject>
+
+		<managedobject code="ExpresslocationsData" properties="true">
+			<persistence name="expresslocations" />
+			<attributes>
+				<attribute name="channel_source" type="String">
+					<description>
+						渠道来源
+					</description>
+				</attribute>
+				<attribute name="inner_source" type="String">
+					<description>
+						业态类别
+					</description>
+				</attribute>
+				<attribute name="province" type="String">
+					<persistence length="32" />
+					<description>
+						收件人所在省
+					</description>
+				</attribute>
+				<attribute name="express_code" type="String">
+					<persistence length="64" />
+					<description>
+						快递公司代码
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="SkuToProductData" properties="true">
+			<persistence name="SkuToProduct" />
+			<attributes>
+				<attribute name="channel" type="String">
+				</attribute>
+				<attribute name="outerId" type="String">
+				</attribute>
+				<attribute name="itemId" type="String">
+				</attribute>
+				<attribute name="itemName" type="String">
+				</attribute>
+				<attribute name="quantity" type="int">
+				</attribute>
+				<attribute name="ratio" type="double">
+				</attribute>
+				<attribute name="innerSource" type="String">
+				</attribute>
+				<attribute name="percent" type="int">
+				</attribute>
+				<attribute name="lockStatus" type="String">
+					<defaultvalue>ACTIVE</defaultvalue>
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="OrderIdGeneratorData">
+			<persistence name="orderidgenerator" />
+			<attributes>
+				<attribute name="orderId" type="Number">
+					<description>Unique id identifier</description>
+					<modifiers generated="true" mandatory="true" final="true" unique="true" tracked="true"/>
+					<persistence length="8" precision="0" />
+				</attribute>
+			</attributes>
+		</managedobject>
+
+		<managedobject code="PendingOrderData" properties="true">
+			<persistence name="pendingorders" />
+			<attributes>
+				<attribute name="tid" type="String">
+					<modifiers mandatory="true" />
+					<persistence length="32" />
+				</attribute>
+				<attribute name="oid" type="String">
+					<persistence length="32" />
+				</attribute>
+				<attribute name="refundfee" type="double" />
+				<attribute name="eventtype" type="EventType" />
+				<attribute name="eventtime" type="Date" />
+				<attribute name="errormsg" type="String">
+					<persistence length="255" />
+				</attribute>
+				<attribute name="state" type="OrderState" />
+				<attribute name="rawmsg" type="String">
+					<persistence length="20000" />
+				</attribute>
+				<!-- TS-1035 add by GaoXin  -->
+				<attribute name="innersource" type="InnerSource" />
+				<attribute name="channelsource" type="ChannelSource" />
+			</attributes>
+		</managedobject>
+	</managedobjects>
+</types>

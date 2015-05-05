@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.hybris.com/schema/onpremise/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.hybris.com/schema/onpremise/beans http://www.hybris.com/schema/onpremise/beans-5.3.xsd">
+
+	<!-- New DTO description -->
+	<package name="tasly.greathealth.oms.api.job.dto">
+		<bean name="TaslyCronJobConfig" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Product DTO for oms-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="jobName" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+			<property name="description" type="String" />
+			<property name="cronExpression" type="String" />
+			<property name="enable" type="boolean" />
+			<property name="jobParams" type="String" />
+			<property name="tenantId" type="String" />
+			<property name="success" type="boolean" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.jobName;
+	}
+				]]>
+			</customCode>
+		</bean>
+		
+		<!-- JD add by libin -->
+		<bean name="JobTimerShaft" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>JobTimerShaft DTO for oms-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="channelSource" type="String" />
+			<property name="innerSource" type="String" />
+			<property name="event" type="String" />
+			<property name="executTime" type="java.util.Date" />
+			<property name="intervalTime" type="int" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.channelSource + "|" + this.innerSource + "|" + this.event;
+	}
+				]]>
+			</customCode>
+		</bean>
+		
+	</package>
+</beans>

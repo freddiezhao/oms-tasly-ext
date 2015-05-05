@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 注入tasly test bean -->
+	<bean id="taslySoapTestService"
+		class="tasly.greathealth.oms.web.inventory.soap.resources.impl.TaslySoapTestServiceImpl">
+		<property name="updateOrderFacade">
+			<ref bean="updateOrderFacade" />
+		</property>
+	</bean>
+	
+
+	<bean id="updateInventoryService"
+		class="tasly.greathealth.oms.web.inventory.soap.resources.impl.UpdateInventoryServiceImpl">
+		<property name="itemInfoFacade">
+			<ref bean="itemInfoFacade" />
+		</property>
+	</bean>
+
+	<!-- for delivery update -->
+	<bean id="taslyOmsDeliveryStatusUpdate"
+		class="tasly.greathealth.oms.web.delivery.soap.resources.impl.TaslyOmsDeliveryStatusUpdateServiceImpl">
+		<property name="orderDeliveryStatusUpdateFacade" ref="orderDeliveryStatusUpdateFacade" />
+	</bean>
+	<!-- for packing update -->
+	<bean id="taslyOmsPackingStatusUpdate"
+		class="tasly.greathealth.oms.web.delivery.soap.resources.impl.TaslyOmsPackingStatusUpdateServiceImpl">
+		<property name="orderDeliveryStatusUpdateFacade" ref="orderDeliveryStatusUpdateFacade" />
+	</bean>
+
+	<!-- for order status synchronization -->
+	<bean id="eccOmsOrderCallback"
+		class="tasly.greathealth.oms.web.orderstatus.soap.resources.impl.EccOmsOrderCallbackServiceImpl">	
+		<property name="taslyOrderFacade" ref="taslyOrderFacade" />	
+	</bean>
+
+	<!-- for order status in interceptor - Weng Liang <bean id="authInterceptor" 
+		class="tasly.greathealth.oms.web.orderstatus.soap.resources.impl.AuthInterceptor"> 
+		<constructor-arg value="receive"/> </bean> <jaxws:inInterceptors> <ref bean="authInterceptor"/> 
+		</jaxws:inInterceptors> -->
+
+</beans>

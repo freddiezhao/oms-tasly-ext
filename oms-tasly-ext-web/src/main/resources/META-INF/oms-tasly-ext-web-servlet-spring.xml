@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<import resource="classpath:/META-INF/oms-rest-resources-spring.xml" />
+	<import resource="classpath:/META-INF/oms-export-rest-resources-spring.xml" />
+	<import resource="classpath:/META-INF/oms-ui-rest-resources-spring.xml" />
+	<import resource="classpath:/META-INF/commons-web-authorization-spring-security-servlet.xml" />
+
+	<!-- Add extension resources here. -->
+
+	<bean id="itemInfoResource" class="tasly.greathealth.oms.web.inventory.rest.resources.ItemInfoResource">
+		<property name="itemInfoFacade" ref="itemInfoFacade" />
+		<property name="itemQuantityService" ref="itemQuantityService" />
+		<property name="taslyItemLocationService" ref="taslyItemLocationService" />
+	</bean>
+
+	<bean id="taslyItemLocationResource" class="tasly.greathealth.oms.web.inventory.rest.resources.TaslyItemLocationResource">
+		<property name="taslyItemLocationFacade" ref="taslyItemLocationFacade" />
+	</bean>
+
+	<bean id="exportStockResource" class="tasly.greathealth.oms.web.inventory.rest.resources.ExportStockResource">
+		<property name="exportStockFacade" ref="exportStockFacade" />
+	</bean>
+
+	<bean id="jobResource" class="tasly.greathealth.oms.web.cronjob.rest.resources.TaslyCronJobConfigResource">
+		<property name="taslyCronjobFacade" ref="defaultTaslyCronjobFacade" />
+		<property name="taobaoclient" ref="taobaoclient" />
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverService" />
+		<property name="testService" ref="testService"></property>
+		<property name="defaultTmallStoreSessionkey" ref="tmallOTCSessionKey" />
+	</bean>
+	
+	<!-- TS-947 Tmall JSC add by GaoXin  -->
+	<bean id="jobResourceForTmallJSC" class="tasly.greathealth.oms.web.cronjob.rest.resources.TaslyCronJobConfigForJSCResource">
+		<property name="taslyCronjobFacade" ref="defaultTaslyCronjobFacade" />
+		<property name="taobaoclient" ref="taobaoJscclient" />
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverServiceTmallJSC" />
+		<property name="testService" ref="testService"></property>
+		<property name="defaultTmallStoreSessionkey" ref="tmallJSCSessionKey" />
+	</bean>
+
+	<bean id="orderProducerResource" class="tasly.greathealth.oms.web.orderproducer.rest.resources.TaslyOrderProducerConfigResource">
+		<property name="producer" ref="orderProducer2" />
+		<property name="innerSource" ref="OTC" />
+	</bean>
+	
+	<!-- TS-947 Tmall JSC add by GaoXin  -->
+	<bean id="orderProducerResourceForTmallJSC" class="tasly.greathealth.oms.web.orderproducer.rest.resources.TaslyJSCOrderProducerConfigResource">
+		<property name="producer" ref="orderProducer2ForTmallJSC" />
+		<property name="innerSource" ref="JSC" />
+	</bean>
+
+	<bean id="orderProducerMockResource" class="tasly.greathealth.oms.web.mock.rest.resource.TaslyOrderProducerMockTestResource">
+		<property name="omsOrderRetrieveService" ref="omsOrderRetrieverService" />
+		<property name="client" ref="taobaoclient" />
+		<property name="defaultTmallStoreSessionkey" ref="tmallOTCSessionKey" />
+	</bean>
+	
+	<bean id="orderProducerMockResourceForTmallJSC" class="tasly.greathealth.oms.web.mock.rest.resource.TaslyOrderProducerMockTestForTmallJSCResource">
+		<property name="omsOrderRetrieveService" ref="omsOrderRetrieverServiceTmallJSC" />
+		<property name="client" ref="taobaoJscclient" />
+		<property name="defaultTmallStoreSessionkey" ref="tmallJSCSessionKey" />
+	</bean>
+
+	<bean id="taslyOrderResource" class="tasly.greathealth.oms.web.order.rest.resources.TaslyOrderResource">
+		<property name="taslyOrderFacade" ref="taslyOrderFacade" />
+	</bean>
+
+	<bean id="taslyErpCodeMappingResource" class="tasly.greathealth.oms.web.erpcodemapping.rest.resources.TaslyErpCodeMappingResource">
+		<property name="updateOrderDeliveryStatusFacade" ref="orderDeliveryStatusUpdateFacade" />
+	</bean>
+
+	<bean id="SkuToProductResource" class="tasly.greathealth.oms.web.inventory.rest.resources.SkuToProductResource">
+		<property name="skuToProductFacade" ref="skuToProductFacade" />
+		<property name="tmallItemService" ref="tmItems"/>
+	</bean>
+
+	<bean id="taslyUiExpressResource" class="tasly.greathealth.oms.web.ui.order.rest.resources.UIOrderExpressResource">
+		<property name="uiExpressFacade" ref="defaultUiExpressInfoFacade" />
+	</bean>
+
+	<bean id="destroyListener" class="tasly.greathealth.oms.web.listener.DestroyListener" />
+	<bean id="taslyExpressResource" class="tasly.greathealth.oms.web.express.rest.resources.TaslyExpressResource">
+		<property name="taslyExpressFacade" ref="taslyExpressFacade" />
+	</bean>
+
+	<bean id="exportOrderResource" class="tasly.greathealth.oms.web.order.rest.resources.ExportOrdersResource">
+		<property name="exportOrderFacade" ref="exportOrderFacade" />
+	</bean>
+
+	<bean id="pendingOrderResource" class="tasly.greathealth.oms.web.order.rest.resources.PendingOrdersResource">
+		<property name="pendingOrderFacade" ref="pendingOrderFacade" />
+	</bean>
+	
+	<bean id="pendingOrderResourceForTmallJSC" class="tasly.greathealth.oms.web.order.rest.resources.PendingOrdersForTmallJSCResource">
+		<property name="pendingOrderFacade" ref="pendingOrderFacadeForTmallJSC" />
+	</bean>
+
+	<bean id="tmallMQ2TestEnvResource" class="com.hybris.oms.rest.resources.TmallMQ2TestEnvResource">
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverService" />
+		<property name="sendTmallMessageRelatedConfig" ref="sendTmallMessageRelatedConfig" />
+	</bean>
+	
+	<!-- TS-947 Tmall JSC add by GaoXin  -->
+	<bean id="tmallJSCMQ2TestEnvResource" class="com.hybris.oms.rest.resources.TmallJSCMQ2TestEnvResource">
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverServiceTmallJSC" />
+		<property name="sendTmallMessageRelatedConfig" ref="sendTmallMessageRelatedConfigJSC" />
+	</bean>
+
+	<bean id="itemQuantityResource" class="tasly.greathealth.oms.web.inventory.rest.resources.ItemQuantityResource">
+		<property name="itemQuantityFacade" ref="itemQuantityFacade" />
+	</bean>
+	
+	<bean id="stockroomLocationResource" class="tasly.greathealth.oms.web.inventory.rest.resources.TaslyStockroomLocationsResource">
+		<property name="taslyStockroomLocationFacade" ref="taslyStockroomLocationFacade" />
+	</bean>
+
+	<bean id="taslyFinancialReportResource" class="tasly.greathealth.oms.web.order.rest.resources.TaslyFinancialReportResource">
+		<property name="taslyFinancialReportFacade" ref="taslyFinancialReportFacade" />
+	</bean>
+	
+	<!-- TS-987 JD add by libin  -->
+	<bean id="jdOrderMockResource" class="tasly.greathealth.oms.web.jdorder.rest.resources.TaslyJdOrderMockResource">
+	   <property name="omsOrderRetrieverService" ref="jdOmsOrderRetrieverService" />
+	   <property name="jdJscClient" ref="jdJscClient" />
+	   <property name="jdJscProduceOrderService" ref="jdJscProduceOrderService" />
+	</bean>
+
+	<bean id="dataPrincipalResource" class="tasly.greathealth.oms.web.principal.rest.resources.DataPrincipalResource">
+		<property name="dataPrincipalFacade" ref="defaultDataPrincipalFacade" />
+	</bean>
+	
+	<!-- JD 新建订单定时任务 时间轴 -->
+	<bean id="taslyJobTimerShaftResource" class="tasly.greathealth.oms.web.jdorder.rest.resources.TaslyJobTimerShaftResource">
+	   <property name="taslyJobTimerShaftFacade" ref="taslyJobTimerShaftFacade" />
+	</bean>
+
+    <bean id="jdLogisticMockResource" class="tasly.greathealth.oms.web.jdlogistic.rest.resource.TaslyJdLogisticMockResource">
+        <property name="baseLogisticService" ref="jdLogisticService" />
+    </bean>
+    
+    <!-- TS-XXX YHD add by libin  OTC-->
+	<bean id="yhdOTCOrderMockResource" class="tasly.greathealth.oms.web.yhdorder.rest.resources.TaslyYhdOtcOrderMockResource">
+	   <property name="omsOrderRetrieverService" ref="yhdOTCOmsOrderRetrieverService" />
+	   <property name="client" ref="yhdOtcClient" />
+	   <property name="sessionKey" ref="yhdOTCSessionKey" />
+	</bean>
+	<!-- TS-XXX YHD add by libin  JSC -->
+	<bean id="yhdJSCOrderMockResource" class="tasly.greathealth.oms.web.yhdorder.rest.resources.TaslyYhdJscOrderMockResource">
+	   <property name="omsOrderRetrieverService" ref="yhdJSCOmsOrderRetrieverService" />
+	   <property name="client" ref="yhdJSCClient" />
+	   <property name="sessionKey" ref="yhdJSCSessionKey" />
+	</bean>
+
+	<bean id="tmallJSCOrderMockResource" class="tasly.greathealth.oms.web.cronjob.rest.resources.TaslyTmallOrderMockResource">
+	   <property name="omsOrderRetrieverService" ref="omsOrderRetrieverServiceTmallJSC" />
+	   <property name="taobaoclient" ref="taobaoJscclient" />
+	   <property name="defaultTmallStoreSessionkey" ref="tmallJSCSessionKey" />
+	</bean>
+
+</beans>

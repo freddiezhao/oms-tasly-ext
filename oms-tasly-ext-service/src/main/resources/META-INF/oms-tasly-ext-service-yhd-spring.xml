@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--YHD Client Start-->
+	<bean id="yhdOtcClient" class="com.yhd.YhdClient">
+		<constructor-arg type="java.lang.String" value="${yhd.otc.url}" />
+		<constructor-arg type="java.lang.String" value="${yhd.otc.app.key}" />
+		<constructor-arg type="java.lang.String" value="${yhd.otc.app.secret}" />
+<!-- 		<constructor-arg type="java.lang.String" value="http://openapi.yhd.com/app/api/rest/router" /> -->
+<!-- 		<constructor-arg type="java.lang.String" value="10220015022700003013" /> -->
+<!-- 		<constructor-arg type="java.lang.String" value="d56f41ba03025dda080b80be44fb0d3c" /> -->
+	</bean>	
+	<bean id="yhdJSCClient" class="com.yhd.YhdClient">
+		<constructor-arg type="java.lang.String" value="${yhd.jsc.url}" />
+		<constructor-arg type="java.lang.String" value="${yhd.jsc.app.key}" />
+		<constructor-arg type="java.lang.String" value="${yhd.jsc.app.secret}" />
+<!-- 		<constructor-arg type="java.lang.String" value="http://openapi.yhd.com/app/api/rest/router" /> -->
+<!-- 		<constructor-arg type="java.lang.String" value="10220015022700003013" /> -->
+<!-- 		<constructor-arg type="java.lang.String" value="d56f41ba03025dda080b80be44fb0d3c" /> -->
+	</bean>	
+<!-- 	<bean id="yhdOTCSessionKey" class="java.lang.String"> -->
+<!-- 		<constructor-arg type="java.lang.String" value="b80ded0e4941732df401d686c3012817" /> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="yhdJSCSessionKey" class="java.lang.String"> -->
+<!-- 		<constructor-arg type="java.lang.String" value="a51f1c5f7683c15eec74916ff665aff2" /> -->
+<!-- 	</bean> -->
+	<bean id="yhdOTCSessionKey" class="java.lang.String">
+		<constructor-arg type="java.lang.String" value="${yhd.otc.session.key}" />
+	</bean>
+	<bean id="yhdJSCSessionKey" class="java.lang.String">
+		<constructor-arg type="java.lang.String" value="${yhd.jsc.session.key}" />
+	</bean>
+	<!--YHD Client End-->
+	<!-- COMMON Start-->
+	<bean id="abstractOrderConverter" class="tasly.greathealth.thirdparty.order.common.AbstractOrderConverService" abstract="true">
+		<property name="skuToProductFacade" ref="skuToProductFacade" />
+		<property name="omsQueryDao" ref="omsQueryImpl" />
+	</bean>
+	<bean id="abstractProduceOrderService" class="tasly.greathealth.thirdparty.order.common.AbstractProduceOrderService" abstract="true">
+		<property name="taslyJobTimerShaftService" ref="taslyJobTimerShaftService" />
+	</bean>
+	
+	<bean id="yhdOrderTransformer" class="tasly.greathealth.yhd.order.transformer.YhdOrderToTaslyTransformer">
+	</bean>
+	<!-- COMMON End-->
+	<!-- OTC Start-->
+	
+	<bean id="yhdOTCOrderConvertService" class="tasly.greathealth.yhd.order.service.impl.YhdOrderConvertSerivceImpl" parent="abstractOrderConverter">
+		<property name="DEFAULT_RENTS" value="${tmall.default.rents}" />
+		<property name="client" ref="yhdOtcClient" />
+		<!-- 
+		<property name="sessionKey" value="${yhd.otc.session.key}" />
+		 -->
+		 <property name="sessionKey" ref="yhdOTCSessionKey" />
+	</bean>
+	
+	<bean id="yhdOTCOmsOrderRetrieverService" class="tasly.greathealth.yhd.order.service.impl.YhdOrderRetrieveServiceImpl">
+		<property name="orderFacade" ref="defaultOrderFacade" />
+		<property name="orderTransformer" ref="yhdOrderTransformer" />
+		<property name="yhdOrderConvertService" ref="yhdOTCOrderConvertService" />
+		<property name="client" ref="yhdOtcClient" />
+		<property name="sessionKey" ref="yhdOTCSessionKey" />	
+	</bean>
+	<!-- 新建订单 Service-->
+	<bean id="yhdOTCProduceOrderService" class="tasly.greathealth.yhd.order.service.impl.YhdProduceOrderServiceImpl" parent="abstractProduceOrderService">
+		<property name="omsOrderRetrieverService" ref="yhdOTCOmsOrderRetrieverService" />
+		<property name="client" ref="yhdOtcClient" />
+		<property name="channel" value="YHD" />
+		<property name="innersource" value="OTC" />
+		<property name="event" value="create" />
+	</bean>
+	<!-- 新建订单定时任务 -->
+	<bean id="yhdOTCOrderCreateWorkerBean"
+		class="tasly.greathealth.yhd.order.cronjob.YhdOrderCreateWorkerBean">
+		<property name="yhdProduceOrderService" ref="yhdOTCProduceOrderService" />
+	</bean>
+	<bean id="yhdOTCOrderCreateJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+		<property name="jobParams" value="jd create order " />
+		<property name="worker" ref="yhdOTCOrderCreateWorkerBean" />
+		<property name="registerOnStartup" value="true" />
+		<property name="scope" value="SINGLE_TENANT" />
+		<property name="tenant" value="single" />
+	</bean>
+	<!-- OTC End-->
+	
+	<!-- JSC Start-->
+	<bean id="yhdJSCOrderConvertService" class="tasly.greathealth.yhd.order.service.impl.YhdOrderConvertSerivceImpl" parent="abstractOrderConverter">
+		<property name="DEFAULT_RENTS" value="${tmall.default.rents}" />
+		<property name="client" ref="yhdJSCClient" />
+		<property name="sessionKey" ref="yhdJSCSessionKey" />	
+	</bean>
+	
+	<bean id="yhdJSCOmsOrderRetrieverService" class="tasly.greathealth.yhd.order.service.impl.YhdOrderRetrieveServiceImpl">
+		<property name="orderFacade" ref="defaultOrderFacade" />
+		<property name="orderTransformer" ref="yhdOrderTransformer" />
+		<property name="yhdOrderConvertService" ref="yhdJSCOrderConvertService" />
+		<property name="client" ref="yhdJSCClient" />
+		<property name="sessionKey" ref="yhdJSCSessionKey" />	
+	</bean>
+	<!-- 新建订单 Service-->
+	<bean id="yhdJSCProduceOrderService" class="tasly.greathealth.yhd.order.service.impl.YhdProduceOrderServiceImpl" parent="abstractProduceOrderService">
+		<property name="omsOrderRetrieverService" ref="yhdJSCOmsOrderRetrieverService" />
+		<property name="client" ref="yhdJSCClient" />
+		<property name="channel" value="YHD" />
+		<property name="innersource" value="JSC" />
+		<property name="event" value="create" />
+	</bean>
+	<!-- 新建订单定时任务 -->
+	<bean id="yhdJSCOrderCreateWorkerBean"
+		class="tasly.greathealth.yhd.order.cronjob.YhdOrderCreateWorkerBean">
+		<property name="yhdProduceOrderService" ref="yhdJSCProduceOrderService" />
+	</bean>
+	<bean id="yhdJSCOrderCreateJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+		<property name="jobParams" value="jd create order " />
+		<property name="worker" ref="yhdJSCOrderCreateWorkerBean" />
+		<property name="registerOnStartup" value="true" />
+		<property name="scope" value="SINGLE_TENANT" />
+		<property name="tenant" value="single" />
+	</bean>
+	<!-- JSC End-->
+	
+	
+	
+<!-- 	更新一号店库存 -->
+<!-- otc -->
+	 <bean id="updateYhdOtcStockWorker" class="tasly.greathealth.thirdparty.inventory.cronjob.AbstractUpdateInventoryWorker"> 
+ 	 		<property name="updateItemService" ref="YhdOtcItemService"></property>
+	 </bean> 
+	
+	 <bean id="updateYhdOtcInventoryJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0  0/5 * * * ?"> </property>
+		<property name="jobParams" value="update stock to tmall"></property>
+		<property name="worker" ref="updateYhdOtcStockWorker"> </property>
+		<property name="registerOnStartup" value="false"></property>
+		<property name="scope" value="SINGLE_TENANT"></property>
+		<property name="tenant" value="single"></property>
+	</bean> 
+	
+	<bean id="YhdOtcItemService" class="tasly.greathealth.thirdparty.inventory.services.impl.AbstractStoreItemService" >
+		<property name="storeItemDao" ref="YhdOtcItemDao"></property>
+		<property name="storeSkuConvertor" ref="YhdOtcSkuConvertor"></property>
+		<property name="exceptionHandle" ref="YhdOtcExceptionHandle"></property>
+		<property name="defaultAtsService" ref="defaultAtsService"></property>
+		<property name="inventoryService" ref="inventoryService"></property>
+		<property name="itemService" ref="itemInfoService" />
+		<property name="writeToFile" ref="writeToFile"/>
+		<property name="FILENAME" value="${tmall.matchFaile.sku.data.filename}"/>
+		<property name="FILEPATH" value="${catalina.base}/logs/tmall/"/>
+		<property name="innerSource" value="OTC"/>
+		<property name="channel" value="YHD"/>
+	</bean>
+	<!-- converter -->
+	<bean id="YhdOtcSkuConvertor" class="tasly.greathealth.thirdparty.inventory.convertor.impl.AbstractStoreSkuConvertor">
+		<property name="skuToProductFacade" ref="skuToProductFacade"></property>
+		<property name="innerSource" value="OTC"/>
+		<property name="channel" value="YHD"/>
+	</bean>
+	<!-- dao -->
+	<bean id="YhdOtcItemDao" class="tasly.greathealth.yhd.inventory.dao.YhdItemDaoImpl">
+		<property name="exceptionHandle" ref="YhdOtcExceptionHandle"></property>
+		<property name="client" ref="yhdOtcClient"/>
+		<property name="pageSize" value="50"></property>
+		<property name="sessionKey" ref="yhdOTCSessionKey"></property>
+	</bean>
+	<bean id="YhdOtcExceptionHandle" class="tasly.greathealth.thirdparty.inventory.exception.StoreExceptionHandle">
+		 <property name="storeItemService" ref="YhdOtcItemService"></property> 
+		 <property name="storeSkuConvertor" ref="YhdOtcSkuConvertor"></property>
+	</bean>
+	
+	
+	<!-- jsc -->
+	 <bean id="updateYhdJscStockWorker" class="tasly.greathealth.thirdparty.inventory.cronjob.AbstractUpdateInventoryWorker"> 
+ 	 		<property name="updateItemService" ref="YhdJscItemService"></property>
+	 </bean> 
+	
+	 <bean id="updateYhdJscInventoryJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0  0/5 * * * ?"> </property>
+		<property name="jobParams" value="update stock to tmall"></property>
+		<property name="worker" ref="updateYhdJscStockWorker"> </property>
+		<property name="registerOnStartup" value="false"></property>
+		<property name="scope" value="SINGLE_TENANT"></property>
+		<property name="tenant" value="single"></property>
+	</bean> 
+	
+	<bean id="YhdJscItemService" class="tasly.greathealth.thirdparty.inventory.services.impl.AbstractStoreItemService" >
+		<property name="storeItemDao" ref="YhdJscItemDao"></property>
+		<property name="storeSkuConvertor" ref="YhdJscSkuConvertor"></property>
+		<property name="exceptionHandle" ref="YhdJscExceptionHandle"></property>
+		<property name="defaultAtsService" ref="defaultAtsService"></property>
+		<property name="inventoryService" ref="inventoryService"></property>
+		<property name="itemService" ref="itemInfoService" />
+		<property name="writeToFile" ref="writeToFile"/>
+		<property name="FILENAME" value="${tmall.matchFaile.sku.data.filename}"/>
+		<property name="FILEPATH" value="${catalina.base}/logs/tmall/"/>
+		<property name="innerSource" value="JSC"/>
+		<property name="channel" value="YHD"/>
+	</bean>
+	<!-- converter -->
+	<bean id="YhdJscSkuConvertor" class="tasly.greathealth.thirdparty.inventory.convertor.impl.AbstractStoreSkuConvertor">
+		<property name="skuToProductFacade" ref="skuToProductFacade"></property>
+		<property name="innerSource" value="JSC"/>
+		<property name="channel" value="YHD"/>
+	</bean>
+	<!-- dao -->
+	<bean id="YhdJscItemDao" class="tasly.greathealth.yhd.inventory.dao.YhdItemDaoImpl">
+		<property name="exceptionHandle" ref="YhdJscExceptionHandle"></property>
+		<property name="client" ref="yhdJSCClient"/>
+		<property name="pageSize" value="50"></property>
+		<property name="sessionKey" ref="yhdJSCSessionKey"></property>
+	</bean>
+	<bean id="YhdJscExceptionHandle" class="tasly.greathealth.thirdparty.inventory.exception.StoreExceptionHandle">
+		 <property name="storeItemService" ref="YhdJscItemService"></property> 
+		 <property name="storeSkuConvertor" ref="YhdJscSkuConvertor"></property>
+	</bean>
+	
+	
+	
+	
+</beans>

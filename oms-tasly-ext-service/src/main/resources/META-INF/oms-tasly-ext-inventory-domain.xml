@@ -1,0 +1,53 @@
+<types xmlns="http://www.hybris.com/schema/ondemand/domain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/onpremise/domain http://www.hybris.com/schema/onpremise/domain-5.3.xsd" 
+	package="tasly.greathealth.oms.inventory.domain">
+		
+	<enumerations>
+		<enumeration code="InventoryDomainInnerSource"> 
+			<values>
+				<value code="JSC"/> 
+				<value code="OTC"/> 
+			</values>
+		</enumeration>
+	</enumerations>
+	
+	<managedobjects>
+	
+		<managedobject code="TaslyStockroomLocationData" extends="StockroomLocationData">
+			<attributes>
+				<attribute name="defaultAllocatePercent" type="int" />
+			</attributes>
+		</managedobject>
+		<managedobject code="TaslyItemLocationData" extends="ItemLocationData">
+			<attributes>
+				<attribute name="allocationPercent" type="int" />
+				<attribute name="safetyStock" type="int" />
+				<attribute name="itemInfo" type="ItemInfoData" />
+			</attributes>
+		</managedobject>
+		
+		<managedobject code="ItemInfoData" properties="true">
+			<persistence name="itemInfos" />
+			<attributes>
+				<attribute name="sku" type="String">
+					<modifiers mandatory="true" unique="true" />
+				</attribute>
+				<attribute name="description" type="String" />
+				<attribute name="quantity" type="int" />
+				<attribute name="baseUnitCode" type="String" />
+				<attribute name="stockManageFlag" type="int" />
+				<attribute name="innerSource" type="InventoryDomainInnerSource" />
+				<attribute name="oldMaterialNumber" type="String" />
+				<attribute name="ext1" type="String" />
+				<attribute name="ext2" type="String" />
+				<attribute name="ext3" type="String" />
+				<attribute name="ext4" type="String" />
+				<attribute name="ext5" type="String" />
+				<attribute name="vendor" type="String" />
+			</attributes>
+			<pk>
+				<attribute name="sku" />
+			</pk>
+		</managedobject>
+	</managedobjects>
+</types>

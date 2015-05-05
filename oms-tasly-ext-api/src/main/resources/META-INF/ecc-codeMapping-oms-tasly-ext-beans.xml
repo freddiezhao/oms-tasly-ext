@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.hybris.com/schema/onpremise/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.hybris.com/schema/onpremise/beans http://www.hybris.com/schema/onpremise/beans-5.3.xsd">
+
+	<!-- New DTO description -->
+	<package name="tasly.greathealth.erp.api.codeMapping.dto">
+		<bean name="ErpCodeMapping" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Product DTO for oms-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="type" type="String"/>
+			<property name="sourceCode" type="String" />
+			<property name="targetCode" type="String" />
+			<property name="comments" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.type;
+	}
+				]]>
+			</customCode>
+		</bean>
+	</package>
+</beans>

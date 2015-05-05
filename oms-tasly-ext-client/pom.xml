@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>oms-tasly-ext</artifactId>
+		<groupId>tasly.greathealth.oms</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>oms-tasly-ext-client</artifactId>
+
+	<dependencies>
+
+		<!-- OMS-EXT -->
+		<dependency>
+			<groupId>tasly.greathealth.oms</groupId>
+			<artifactId>oms-tasly-ext-api</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>tasly.greathealth.oms</groupId>
+			<artifactId>oms-tasly-ext-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Commons -->
+		<dependency>
+			<groupId>com.hybris.commons</groupId>
+			<artifactId>hybris-commons-rest-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.hybris.oms</groupId>
+			<artifactId>oms-rest-client</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

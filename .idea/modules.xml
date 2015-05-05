@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext.iml" filepath="$PROJECT_DIR$/oms-tasly-ext.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext-api/oms-tasly-ext-api.iml" filepath="$PROJECT_DIR$/oms-tasly-ext-api/oms-tasly-ext-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext-client/oms-tasly-ext-client.iml" filepath="$PROJECT_DIR$/oms-tasly-ext-client/oms-tasly-ext-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext-integration-test/oms-tasly-ext-integration-test.iml" filepath="$PROJECT_DIR$/oms-tasly-ext-integration-test/oms-tasly-ext-integration-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext-service/oms-tasly-ext-service.iml" filepath="$PROJECT_DIR$/oms-tasly-ext-service/oms-tasly-ext-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext-soapclient/oms-tasly-ext-soapclient.iml" filepath="$PROJECT_DIR$/oms-tasly-ext-soapclient/oms-tasly-ext-soapclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/oms-tasly-ext-web/oms-tasly-ext-web.iml" filepath="$PROJECT_DIR$/oms-tasly-ext-web/oms-tasly-ext-web.iml" />
+    </modules>
+  </component>
+</project>

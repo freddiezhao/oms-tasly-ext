@@ -1,0 +1,22 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+		
+	<alias name="taslyGeocodingWorkItemWorker" alias="geocodingWorkItemWorker" />
+		<bean id="taslyGeocodingWorkItemWorker" class="tasly.greathealth.thirdparty.workflow.TaslyGeocodingWorkItemWorker" parent="abstractWorkItemWorker">
+	</bean>	
+    
+    <alias name="taslySourcingResultPersistenceStrategy" alias="sourcingResultPersistenceStrategy" />
+	<bean id="taslySourcingResultPersistenceStrategy" class="tasly.greathealth.thirdparty.workflow.TaslySourcingResultPersistenceStrategy">
+		<property name="orderService" ref="orderService" />
+		<property name="persistenceManager" ref="persistenceManager" />
+		<property name="expressService" ref="tmallExpressService"/>
+	</bean>
+	
+	<alias name="taslyOlqGroupingStrategy" alias="olqGroupingStrategy" />
+	<bean id="taslyOlqGroupingStrategy" class="tasly.greathealth.thirdparty.workflow.TaslyOlqGroupingStrategy" />
+</beans>

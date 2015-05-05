@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<alias name="taslyJDQueryFactory" alias="jdQueryFactory" />
+	<bean id="taslyJDQueryFactory"
+		class="tasly.greathealth.jd.order.service.impl.TaslyJDQueryFactory">
+		<property name="persistenceManager" ref="persistenceManager" />
+	</bean>
+	
+	<bean id="jdOrderTransformer" class="tasly.greathealth.jd.order.transformer.JdOrderToTaslyTransformer">
+	</bean>
+	
+	<bean id="abstractOrderConverter" class="tasly.greathealth.thirdparty.order.common.AbstractOrderConverService" abstract="true">
+		<property name="skuToProductFacade" ref="skuToProductFacade" />
+		<property name="omsQueryDao" ref="omsQueryImpl" />
+	</bean>
+	
+	<bean id="jdOrderConvertService" class="tasly.greathealth.jd.order.service.impl.JdOrderConvertSerivceImpl" parent="abstractOrderConverter">
+		<property name="DEFAULT_RENTS" value="${tmall.default.rents}" />
+		<property name="jdJscClient" ref="jdJscClient" />
+	</bean>
+
+	<bean id="jdOmsOrderRetrieverService" class="tasly.greathealth.jd.order.service.impl.JdOrderRetrieveServiceImpl">
+		<property name="orderFacade" ref="defaultOrderFacade" />
+		<property name="orderTransformer" ref="jdOrderTransformer" />
+		<property name="jdOrderConvertService" ref="jdOrderConvertService" />
+		<property name="jdJscClient" ref="jdJscClient" />
+	</bean>
+	
+	<bean id="jdJscClient" class="com.jd.open.api.sdk.DefaultJdClient">
+		<constructor-arg type="java.lang.String" value="${jd.jsc.url}" />
+		<constructor-arg type="java.lang.String" value="${jd.jsc.access.token}" />
+		<constructor-arg type="java.lang.String" value="${jd.jsc.app.key}" />
+		<constructor-arg type="java.lang.String" value="${jd.jsc.app.secret}" />
+	</bean>	
+<!-- 	<bean id="jdJscClient" class="com.jd.open.api.sdk.DefaultJdClient"> -->
+<!-- 		<constructor-arg name="serverUrl" value="http://gw.api.360buy.com/routerjson"/> -->
+<!-- 		<constructor-arg name="accessToken" value="afe8e53a-4bce-4ff1-86bc-b8f4a1c7c083"/> -->
+<!-- 		<constructor-arg name="appKey" value="7A8F5D511E42DFF7B56F3985E3AF27CD"/> -->
+<!-- 		<constructor-arg name="appSecret" value="2aa57ec42c5c49ebbb6ab1cdeb46a876"/> -->
+<!-- 	</bean>	 -->
+	
+	<!-- 新建定时任务时间轴 -->
+	<alias name="taslyJobTimerShaftServiceImpl" alias="taslyJobTimerShaftService" />
+	<bean id="taslyJobTimerShaftServiceImpl"
+		class="tasly.greathealth.jd.order.service.impl.TaslyJobTimerShaftServiceImpl">
+		<property name="jdQueryFactory" ref="jdQueryFactory" />
+	</bean>
+	
+	<alias name="defaultTaslyJobTimerShaftFacade" alias="taslyJobTimerShaftFacade" />
+	<bean id="defaultTaslyJobTimerShaftFacade"
+		class="tasly.greathealth.jd.order.facades.DefaultTaslyJobTimerShaftFacade">
+		<property name="taslyJobTimerShaftService" ref="taslyJobTimerShaftService" />
+		<property name="jobTimerShaftModelToDataConverter" ref="jobTimerShaftModelToDataConverter" />
+		<property name="jobTimerShaftDataToModelConverter" ref="jobTimerShaftDataToModelConverter" />
+	</bean>
+	
+	<!-- ModelToData-->
+	<alias name="propertyAwareJobTimerShaftModelToDataPopulator" alias="jobTimerShaftModelToDataPopulator" />
+	<bean id="propertyAwareJobTimerShaftModelToDataPopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultJobTimerShaftModelToDataPopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultJobTimerShaftModelToDataPopulator" class="tasly.greathealth.jd.order.conversion.JobTimerShaftModelToDataPopulator" />
+
+	<bean id="jobTimerShaftModelToDataConverter" class="tasly.greathealth.jd.order.conversion.JobTimerShaftModelToDataConverter">
+		<property name="taslyJobTimerShaftService" ref="taslyJobTimerShaftService" />
+		<property name="populator" ref="jobTimerShaftModelToDataPopulator" />
+	</bean>
+	
+	 
+     <!-- DataToModel-->
+	<alias name="propertyAwareJobTimerShaftDataToModelPopulator" alias="jobTimerShaftDataToModelPopulator" />
+	<bean id="propertyAwareJobTimerShaftDataToModelPopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultJobTimerShaftDataToModelPopulator" />
+				<ref bean="propertyAwarePopulator" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultJobTimerShaftDataToModelPopulator" class="tasly.greathealth.jd.order.conversion.JobTimerShaftDataToModelPopulator" />
+
+	<bean id="jobTimerShaftDataToModelConverter" class="tasly.greathealth.jd.order.conversion.JobTimerShaftDataToModelConverter">
+		<property name="populator" ref="jobTimerShaftDataToModelPopulator" />
+	</bean>
+	
+	
+	
+	<!-- workflow bug sourcing 成功一半的问题 
+	<alias name="taslyShipmentsAllocationWorkItemWorker" alias="shipmentsAllocationWorkItemWorker" />
+	<bean id="taslyShipmentsAllocationWorkItemWorker" class="tasly.greathealth.thirdparty.workflow.TaslyShipmentAllocationWorkItemWorker" parent="abstractWorkItemWorker">
+		<property name="shipmentService" ref="shipmentService" />
+		<property name="orderService" ref="orderService" />
+	</bean>
+	-->
+	<!-- JD 新建订单 Service-->
+	<bean id="jdJscProduceOrderService" class="tasly.greathealth.jd.order.service.impl.JdCreateOrderServiceImpl" parent="abstractProduceOrderService">
+		<property name="omsOrderRetrieverService" ref="jdOmsOrderRetrieverService" />
+		<property name="client" ref="jdJscClient" />
+		<property name="channel" value="JD" />
+		<property name="innersource" value="JSC" />
+		<property name="event" value="create" />
+		<!-- 
+		<property name="taslyJobTimerShaftService" ref="taslyJobTimerShaftService" />
+		 -->
+	</bean>
+	
+	<!-- JD 新建订单定时任务 -->
+	<bean id="jdOrderCreateWorkerBean"
+		class="tasly.greathealth.jd.order.cronjob.JdOrderCreateWorkerBean">
+		<property name="jdJscProduceOrderService" ref="jdJscProduceOrderService" />
+	</bean>
+
+	<bean id="jdOrderCreateJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+		<property name="jobParams" value="jd create order " />
+		<property name="worker" ref="jdOrderCreateWorkerBean" />
+		<property name="registerOnStartup" value="true" />
+		<property name="scope" value="SINGLE_TENANT" />
+		<property name="tenant" value="single" />
+	</bean>
+
+    <!-- JD 同步物流信息定时任务 -->
+    <bean id="jdLogisticCreateJob" class="com.hybris.kernel.api.JobDetailsBean">
+        <property name="cronExpression" value="0 0/5 * * * ?"/>
+        <property name="jobParams" value="jd create logistic "/>
+        <property name="worker" ref="createJDLogisticWorker"/>
+        <property name="registerOnStartup" value="true"/>
+        <property name="scope" value="SINGLE_TENANT"/>
+        <property name="tenant" value="single"/>
+    </bean>
+
+    <bean id="createJDLogisticWorker" class="tasly.greathealth.jd.logistic.conjob.CreateJDLogisticInfoWorker">
+        <property name="baseLogisticService" ref="jdLogisticService" />
+    </bean>
+
+    <bean id="jdLogisticService" class="tasly.greathealth.jd.logistic.service.impl.JDSopOutstorageServiceImpl">
+        <property name="baseLogisticDao" ref="jdSopOutstorageDao"/>
+        <property name="omsOrderRetrieverService" ref="omsOrderRetrieverService"/>
+        <property name="defaultDnLogService" ref="defdnLogService"/>
+        <property name="innerSource" value="JSC"/>
+        <property name="channelSource" value="JD"/>
+    </bean>
+
+    <bean id="jdSopOutstorageDao" class="tasly.greathealth.jd.logistic.dao.impl.JDSopOutstorageDaoImpl">
+        <property name="jdClient" ref="jdJscClient"/>
+        <property name="defaultDnLogService" ref="defdnLogService"/>
+    </bean>
+
+
+
+
+
+
+	<!-- 更新库存 -->
+	
+	 <bean id="updateJdStockWorker" class="tasly.greathealth.thirdparty.inventory.cronjob.AbstractUpdateInventoryWorker"> 
+ 	 		<property name="updateItemService" ref="JdItemService"></property>
+	 </bean> 
+	
+	 <bean id="updateJdInventoryJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0  0/5 * * * ?"> </property>
+		<property name="jobParams" value="update stock to tmall"></property>
+		<property name="worker" ref="updateJdStockWorker"> </property>
+		<property name="registerOnStartup" value="false"></property>
+		<property name="scope" value="SINGLE_TENANT"></property>
+		<property name="tenant" value="single"></property>
+	</bean> 
+	
+	<bean id="JdItemService" class="tasly.greathealth.thirdparty.inventory.services.impl.AbstractStoreItemService" >
+		<property name="storeItemDao" ref="JdItemDao"></property>
+		<property name="storeSkuConvertor" ref="JdSkuConvertor"></property>
+		<property name="exceptionHandle" ref="JdExceptionHandle"></property>
+		<property name="defaultAtsService" ref="defaultAtsService"></property>
+		<property name="inventoryService" ref="inventoryService"></property>
+		<property name="itemService" ref="itemInfoService" />
+		<property name="writeToFile" ref="writeToFile"/>
+		<property name="FILENAME" value="${tmall.matchFaile.sku.data.filename}"/>
+		<property name="FILEPATH" value="${catalina.base}/logs/tmall/"/>
+		<property name="innerSource" value="JSC"/>
+		<property name="channel" value="JD"/>
+	</bean>
+	<!-- converter -->
+	<bean id="JdSkuConvertor" class="tasly.greathealth.thirdparty.inventory.convertor.impl.AbstractStoreSkuConvertor">
+		<property name="skuToProductFacade" ref="skuToProductFacade"></property>
+		<property name="innerSource" value="JSC"/>
+		<property name="channel" value="JD"/>
+	</bean>
+	<!-- dao -->
+	<bean id="JdItemDao" class="tasly.greathealth.jd.inventory.dao.JdItemDaoImpl">
+		<property name="exceptionHandle" ref="JdExceptionHandle"></property>
+		<property name="client" ref="jdJscClient"/>
+		<property name="pageSize" value="50"></property>
+	</bean>
+	<bean id="JdExceptionHandle" class="tasly.greathealth.thirdparty.inventory.exception.StoreExceptionHandle">
+		 <property name="storeItemService" ref="JdItemService"></property> 
+		 <property name="storeSkuConvertor" ref="JdSkuConvertor"></property>
+		 
+		 <property name="TMALL_SHOP_OTC" value="${tmall.shop.otc}"/>
+		 <property name="TMALL_SHOP_JSC" value="${tmall.shop.jsc}"/> 
+	</bean>
+
+</beans>

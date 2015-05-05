@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- oms_tamll spring configuration .xml file -->
+	
+	<!-- converter -->
+	<alias name="buildProductTmConvertor" alias="defaultBuildProductTmConvertor"></alias>
+	<bean id="buildProductTmConvertor" class="tasly.greathealth.tmall.inventory.exchange.impl.BuildProductTmConvertorImpl">
+		<property name="skuToProductFacade" ref="skuToProductFacade"></property>
+		<property name="TMALL_CHANNEL_SYMBOL" value="${tmall.channel.symbol}"/>
+		<property name="TMALL_SHOP_OTC" value="${tmall.shop.otc}"/>
+		<property name="TMALL_SHOP_JSC" value="${tmall.shop.jsc}"/>
+		<!-- <property name="taobaoOtcclient" ref="taobaoOtcclient"/>
+		<property name="OTC_TMALL_STORE_SESSIONKEY" value="${tmall.otc.sessionkey}"/>
+		<property name="taobaoJscclient" ref="taobaoJscclient"/>
+		<property name="JSC_TMALL_STORE_SESSIONKEY" value="${tmall.jsc.sessionkey}"/>	 -->	
+		
+	</bean>
+	
+	<!-- exception handle -->
+	<alias name="exceptionHandle" alias="exceptionHandle"></alias>
+	<bean id="exceptionHandle" class="tasly.greathealth.tmall.inventory.exception.ExceptionHandle">
+		 <property name="tmallItemService" ref="tmItems"></property> 
+		 <property name="buildProductTmConvertor" ref="defaultBuildProductTmConvertor"></property>
+		 
+		 <property name="TMALL_SHOP_OTC" value="${tmall.shop.otc}"/>
+		 <property name="TMALL_SHOP_JSC" value="${tmall.shop.jsc}"/> 
+	</bean>
+	
+	
+	<alias name="defaultDnLogService" alias="defdnLogService" />
+	<bean id="defaultDnLogService" class="tasly.greathealth.erp.dnlog.service.impl.DefaultDNLogService">
+	</bean>
+	
+	
+	
+	<!-- dao -->
+	<bean id="tmallItemDao" class="tasly.greathealth.tmall.inventory.dao.impl.TmallItemDaoImpl">
+		<property name="exceptionHandle" ref="exceptionHandle"></property>
+	</bean>
+	
+    <bean id="tmallLogisticDao" class="tasly.greathealth.tmall.logistic.dao.impl.TmallLogisticOfflineDaoImpl">
+    	<property name="taobaoOtcclient" ref="taobaoOtcclient"/>
+		<property name="OTC_TMALL_STORE_SESSIONKEY" value="${tmall.otc.sessionkey}"/>
+		<property name="taobaoJscclient" ref="taobaoJscclient"/>
+		<property name="JSC_TMALL_STORE_SESSIONKEY" value="${tmall.jsc.sessionkey}"/>	
+		
+		<property name="defaultDnLogService" ref="defdnLogService"></property>
+	</bean> 
+	<!-- service -->
+	
+	<alias name="tmallItemService" alias="tmItems" />
+	<bean id="tmallItemService" class="tasly.greathealth.tmall.inventory.services.impl.TmallItemServiceImpl">
+		<property name="exceptionHandle" ref="exceptionHandle"></property>
+		<property name="tmallItemDao" ref="tmallItemDao"></property>
+		<property name="buildProductTmConvertor" ref="defaultBuildProductTmConvertor"></property>
+		<property name="defaultAtsService" ref="defaultAtsService"></property>
+		<property name="inventoryService" ref="inventoryService"></property>
+		<property name="itemService" ref="itemInfoService" />
+		<property name="writeToFile" ref="writeToFile"/>
+		
+		<property name="taobaoOtcclient" ref="taobaoOtcclient"/>
+		<property name="OTC_TMALL_STORE_SESSIONKEY" value="${tmall.otc.sessionkey}"/>
+		<property name="taobaoJscclient" ref="taobaoJscclient"/>
+		<property name="JSC_TMALL_STORE_SESSIONKEY" value="${tmall.jsc.sessionkey}"/>
+		<property name="TMALL_SHOP_OTC" value="${tmall.shop.otc}"/>
+		<property name="TMALL_SHOP_JSC" value="${tmall.shop.jsc}"/>
+		
+		<property name="FILENAME" value="${tmall.matchFaile.sku.data.filename}"/>
+		<property name="FILEPATH" value="${catalina.base}/logs/tmall/"/>
+		
+	</bean>
+	
+	<bean id="tmallLogisticService" class="tasly.greathealth.tmall.logistic.service.impl.TmallLogisticServiceImpl">
+		<property name="tmallLogisticDao" ref="tmallLogisticDao"></property> 
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverService"></property>
+		<property name="defaultDnLogService" ref="defdnLogService"></property>
+	</bean> 
+	
+	<bean id="writeToFile" class="tasly.greathealth.tmall.inventory.file.impl.WriteToFileImpl"></bean>
+	
+	
+ 	<!-- query factory -->
+<!--	<alias name="taslyOrderLineQueryFactory" alias="taslyOrderLineQueryFactory" />
+	<bean id ="taslyOrderLineQueryFactory" class="tasly.greathealth.tmall.inventory.dao.impl.TaslyOrderLineQueryFactory">
+		<property name="persistenceManager" ref="persistenceManager"></property>
+	</bean> -->
+	
+	
+	<!-- cronjob -->
+   	<bean id="updateTmallStockWorker" class="tasly.greathealth.tmall.inventory.cronjob.UpdateTmallInventoryWorker"> 
+ 	 		<property name="tmallItemService" ref="tmItems"></property>
+	</bean> 
+	
+	 <bean id="updateTmallInventoryJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0 5 * * ?"> </property>
+		<property name="jobParams" value="update stock to tmall"></property>
+		<property name="worker" ref="updateTmallStockWorker"> </property>
+		<property name="registerOnStartup" value="false"></property>
+		<property name="scope" value="SINGLE_TENANT"></property>
+		<property name="tenant" value="single"></property>
+	</bean>  
+	
+	<bean id="createTmallLogisticWorker" class="tasly.greathealth.tmall.logistic.conjob.CreateTmallLogisticInfoWorker">
+		<property name="defaultTmallLogisticService" ref="tmallLogisticService"></property>
+	</bean>
+
+	<bean id="createTmallLogisticInfoJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0/10 * * * ?"/>
+		<property name="jobParams" value="create tmall logistic "/>
+		<property name="worker" ref="createTmallLogisticWorker"/>
+		<property name="registerOnStartup" value="false"/>
+		<property name="scope" value="SINGLE_TENANT"/>
+		<property name="tenant" value="single"/>
+	</bean>	
+	<!-- end  -->
+	
+	<!-- order validation strat -->
+	
+	<alias name="omsOrderValidator" alias="orderValidator" />
+	<bean id="omsOrderValidator" class="tasly.greathealth.oms.order.validation.TaslyOrderValidator">
+		<property name="currencyValidator" ref="currencyValidator" />
+		<property name="orderLineValidator" ref="orderLineValidator" />
+		<property name="paymentInfoValidator" ref="paymentInfoValidator" />
+		<property name="addressValidator" ref="addressValidator" />
+		<property name="inventoryService" ref="inventoryService" />
+		<property name="baseStoreService" ref="baseStoreService" />
+		<property name="orderRepeatValidator" ref="orderRepeatValidator" />
+	</bean>
+	
+	<bean id="taslyOrderValidateService" class="tasly.greathealth.thirdparty.order.impl.TaslyOrderValidateServiceImpl">
+	</bean>
+	
+	<alias name="defaultOrderRepeatValidator" alias="orderRepeatValidator" />
+	<bean id="defaultOrderRepeatValidator" class="tasly.greathealth.oms.order.validation.OrderRepeatMsgValidator">
+		<property name="taslyOrderValidateService" ref="taslyOrderValidateService" />
+	</bean>
+	<!-- order validation end -->
+	
+	<bean id="toTmallSynchronizor" class="tasly.greathealth.tmall.order.event.ToTmallSynchronizor">
+	</bean>
+	
+	<bean id="tmallUtil" class="tasly.greathealth.tmall.order.services.impl.TmallUtil">
+		<property name="client" ref="taobaoclient" />
+		<property name="defaultTmallOtcSessionKey" value="${tmall.default.sessionkey}" />
+	</bean>
+	
+	<bean id="tmallUtilForJSC" class="tasly.greathealth.tmall.order.services.impl.TmallUtilForJSC">
+		<property name="client" ref="taobaoJscclient" />
+		<property name="defaultTmallOtcSessionKey" value="${tmall.jsc.sessionkey}" />
+	</bean>
+	
+	<bean id="testService" class="tasly.greathealth.tmall.order.services.impl.MockOrderTestServiceImpl">
+	</bean>
+</beans>

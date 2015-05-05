@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="dataPrincipalDataToModelPopulator" class="tasly.greathealth.oms.principal.conversion.DataPrincipalDataToModelPopulator" />
+
+	<bean id="dataPrincipalDTO" class="tasly.greathealth.oms.api.principal.dto.DataPrincipal" scope="prototype" />
+	<bean id="dataPrincipalDataToModelConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="dataPrincipalDTO" />
+		<property name="populator" ref="dataPrincipalDataToModelPopulator" />
+	</bean>
+
+	<bean id="defaultDataPrincipalFacade" class="tasly.greathealth.oms.principal.facades.impl.DefaultDataPrincipalFacade">
+		<property name="dataPrincipalService" ref="defaultDataPrincipalService" />
+		<property name="dataPrincipalDataToModelConverter" ref="dataPrincipalDataToModelConverter" />
+		<property name="converters" ref="converters" />
+	</bean>
+
+	<bean id="defaultDataPrincipalService" class="tasly.greathealth.oms.principal.services.impl.DefaultDataPrincipalService" />
+
+	<bean id="itemInfoQueryFactory" class="tasly.greathealth.oms.inventory.services.impl.ItemInfoQueryFactory">
+		<property name="persistenceManager" ref="persistenceManager" />
+	</bean>
+</beans>

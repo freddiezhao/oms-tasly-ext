@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="oms-tasly-ext-web:war">
+    <output-path>$PROJECT_DIR$/oms-tasly-ext-web/target</output-path>
+    <root id="archive" name="oms-tasly-ext-web-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="oms-tasly-ext-web:war exploded" />
+    </root>
+  </artifact>
+</component>

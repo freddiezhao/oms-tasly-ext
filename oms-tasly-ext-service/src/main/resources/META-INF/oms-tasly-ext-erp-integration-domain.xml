@@ -1,0 +1,59 @@
+<types xmlns="http://www.hybris.com/schema/ondemand/domain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/onpremise/domain http://www.hybris.com/schema/onpremise/domain-5.3.xsd" 
+	package="tasly.greathealth.oms.domain.erp">
+
+	<managedobjects>
+		<managedobject code="DNLogData" properties="true">
+			<persistence name="dnlog" />
+			<attributes>
+				<attribute name="oms_order_id" type="String">
+					<description>
+		                OMS Order ID
+		            </description>
+				</attribute>
+				<attribute name="oms_order_line_id" type="String">
+					<description>
+		                OMS Order Line ID
+		            </description>
+				</attribute>
+				<attribute name="replication_flag" type="String">
+					<description>
+						flags to indicate replicated or not
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+	</managedobjects>
+	
+	<!-- used for ERP-OMS order field mapping
+	     added by vincent.yin
+	  -->
+	<managedobjects>
+		<managedobject code="ErpCodeMappingData" properties="true">
+			<persistence name="ErpCodeMapping" />
+			<attributes>
+				<attribute name="type" type="String">
+					<description>
+		               type of field
+		            </description>
+				</attribute>
+				<attribute name="souceCode" type="String">
+					<description>
+		                OMS souce code
+		            </description>
+				</attribute>
+				<attribute name="targetCode" type="String">
+					<description>
+						ECC needed code
+					</description>
+				</attribute>
+				<attribute name="comments" type="String">
+					<description>
+						comments
+					</description>
+				</attribute>
+			</attributes>
+		</managedobject>
+	</managedobjects>
+	
+</types>

@@ -1,0 +1,522 @@
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>>%d [%-5level][%c][%C{0}]Line:[%L] %m%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/tasly-oms-all.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/tasly-oms-all-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%c][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>
+	
+	<appender name="tmall-order" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/tmall/tmall-order.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/tmall/tmall-order-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+
+	<appender name="tmall-inventory" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/tmall/tmall-inventory.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/tmall/tmall-inventory-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	
+	<appender name="tmall-product" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/tmall/tmall-product.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/tmall/tmall-product-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	<appender name="tmall-logistic" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/tmall/tmall-logistic.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/tmall/tmall-logistic-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	<appender name="erp-order" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/erp/erp-order.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/erp/erp-order-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+
+	<appender name="erp-inventory" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/erp/erp-inventory.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/erp/erp-inventory-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	
+	<appender name="erp-product" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/erp/erp-product.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/erp/erp-product-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	
+	<!-- put all of the error message into seperate file -->	
+	<appender name="erp-order-error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/erp/erp-order-error.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/erp/erp-order-error-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+		
+	<appender name="oms-order" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/oms/oms-order.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/oms/oms-order-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+
+	<appender name="oms-inventory" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/oms/oms-inventory.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/oms/oms-inventory-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>
+	
+	<!-- put all of the error sku into seperate file -->	
+	<appender name="oms-errorsku" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/oms/oms-errorsku.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/oms/oms-errorsku-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	
+	<appender name="oms-product" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/oms/oms-product.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/oms/oms-product-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>
+	
+	<!-- JD start -->
+	<appender name="jd-order" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/jd/jd-order.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/jd/jd-order-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>		
+	<appender name="jd-inventory" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/jd/jd-inventory.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/jd/jd-inventory-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	
+	<appender name="jd-product" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/jd/jd-product.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/jd/jd-product-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>	
+	<appender name="jd-logistic" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/jd/jd-logistic.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/jd/jd-logistic-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>
+	<!-- JD end -->
+	
+	<!-- YHD start -->
+	<appender name="yhd-order" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/yhd/yhd-order.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/yhd/yhd-order-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+	</appender>		
+	<appender name="yhd-inventory" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/yhd/yhd-inventory.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/yhd/yhd-inventory-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+	</appender>	
+	
+	<appender name="yhd-product" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/yhd/yhd-product.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/yhd/yhd-product-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+	</appender>	
+	<appender name="yhd-logistic" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/yhd/yhd-logistic.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/yhd/yhd-logistic-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%C{0}]Line:[%L] %m%n</pattern>
+		</encoder>
+	</appender>
+	<!-- YHD end -->		
+
+	<logger name="javax.validation" level="info" />
+
+	<logger name="org.springframework.beans.factory" level="warn" />
+	<logger name="org.springframework.transaction" level="info" />
+	<logger name="org.springframework.validation" level="info" />
+	<logger name="org.springframework.test" level="warn" />
+	<logger name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor" level="trace" appender-ref="STDOUT" />
+
+	<logger name="com.hybris.oms" level="info" />
+	<logger name="org.jgroups" level="debug" />
+	<logger name="com.hybris.kernel" level="info" />
+
+	<logger name="com.hybris.commons" level="debug" />
+
+	<logger name="httpclient.wire.content" level="debug" />
+	<logger name="net.sf.ehcache" level="info" />
+	<logger name="httpclient.wire.header" level="debug" />
+	<logger name="com.hybris.oms.service.ats" level="debug" />
+	<logger name="com.hybris.oms.service.sourcing" level="debug" />
+
+	<!-- DB statements -->
+	<logger name="com.hybris.kernel.engine.jdbc.JDBCPersistenceEngine" level="info" />
+	<logger name="com.hybris" level="info" />
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="info" />
+
+	<logger name="tmall-order" level="debug">
+		<appender-ref ref="tmall-order" />
+	</logger>
+	<logger name="tmall-inventory" level="debug">
+		<appender-ref ref="tmall-inventory" />
+	</logger>
+	<logger name="tmall-product" level="debug">
+		<appender-ref ref="tmall-inventory" />
+	</logger>
+	<logger name="tmall-logistic" level="debug">
+		<appender-ref ref="tmall-logistic" />
+	</logger>
+	
+	<logger name="erp-order" level="debug">
+		<appender-ref ref="erp-order" />
+	</logger>
+	<logger name="erp-inventory" level="debug">
+		<appender-ref ref="erp-inventory" />
+	</logger>
+	<logger name="erp-product" level="debug">
+		<appender-ref ref="erp-product" />
+	</logger>
+	<logger name="erp-order-error" level="error">
+		<appender-ref ref="erp-order-error" />
+	</logger>
+	
+	<logger name="oms-order" level="debug">
+		<appender-ref ref="oms-order" />
+	</logger>
+	<logger name="oms-inventory" level="debug">
+		<appender-ref ref="oms-inventory" />
+	</logger>
+	<logger name="oms-errorsku" level="error">
+		<appender-ref ref="oms-errorsku" />
+	</logger>
+	<logger name="oms-product" level="debug">
+		<appender-ref ref="oms-product" />
+	</logger>
+
+    <logger name="jd-order" level="debug">
+        <appender-ref ref="jd-order" />
+    </logger>
+    <logger name="jd-inventory" level="debug">
+        <appender-ref ref="jd-inventory" />
+    </logger>
+    <logger name="jd-product" level="debug">
+        <appender-ref ref="jd-product" />
+    </logger>
+    <logger name="jd-logistic" level="debug">
+        <appender-ref ref="jd-logistic" />
+    </logger>
+    
+    <logger name="yhd-order" level="debug">
+        <appender-ref ref="jd-order" />
+    </logger>
+    <logger name="yhd-inventory" level="debug">
+        <appender-ref ref="yhd-inventory" />
+    </logger>
+    <logger name="yhd-product" level="debug">
+        <appender-ref ref="yhd-product" />
+    </logger>
+    <logger name="yhd-logistic" level="debug">
+        <appender-ref ref="yhd-logistic" />
+    </logger>
+
+	<root level="info">
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>

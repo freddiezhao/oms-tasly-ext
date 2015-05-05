@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.hybris.com/schema/onpremise/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/onpremise/beans http://www.hybris.com/schema/onpremise/beans-5.3.xsd">
+	<!-- New DTO description -->
+	<package name="tasly.greathealth.oms.api.order.dto">
+		<enum name="PackingType">
+			<description>拨次</description>
+			<value>PACKING</value>
+			<value>PACKED</value>
+		</enum>
+
+		<enum name="DeliveryServiceType">
+			<description>配送方式次</description>
+			<value>EXPRESS</value>
+			<value>EMS</value>
+		</enum>
+
+		<enum name="ChannelSource">
+			<description>渠道来源</description>
+			<value>TMALL</value>
+			<value>JD</value>
+			<value>GREATHEALTH</value>
+			<value>YHD</value>
+			<value>AMAZON</value>
+			<value>SUNING</value>
+			<value>CCB</value>
+			<value>ICBC</value>
+			<value>CCTV</value>
+		</enum>
+
+		<enum name="InnerSource">
+			<description>业态</description>
+			<value>JSC</value>
+			<value>OTC</value>
+		</enum>
+
+		<enum name="ShippingLockStatus">
+			<description>发货锁定标记</description>
+			<value>NON_LOCK</value>
+			<value>PENDING_LOCK</value>
+			<value>LOCK_SUCCESS</value>
+			<value>LOCK_FAILED</value>
+			<value>PENDING_UNLOCK</value>
+			<value>UNLOCK_FAILED</value>
+		</enum>
+
+		<enum name="ShadInfoUpdateStatus">
+			<description>订单收货人信息修改状态</description>
+			<value>DEFAULT</value>
+			<value>REQ_MODIFY</value>
+			<value>REQ_FAILED</value>
+		</enum>
+
+		<enum name="SpecialMemoUpdateStatus">
+			<description>特殊备注信息修改状态</description>
+			<value>DEFAULT</value>
+			<value>REQ_MODIFY</value>
+			<value>REQ_FAILED</value>
+		</enum>
+
+		<enum name="ApproveStatus">
+			<description>审核标识</description>
+			<value>DEFAULT</value>
+			<value>APPROVED</value>
+			<value>PROCESSING</value>
+		</enum>
+	
+		<enum name="EventType">
+			<description>Event Type</description>
+			<value>ORDERCREATE</value>
+			<value>SELLERSHIP</value>
+			<value>REFUNDCREATE</value>
+			<value>REFUNDSELLERAGREE</value>
+			<value>REFUNDSELLERREFUSE</value>
+			<value>REFUNDSUCCESS</value>
+			<value>REFUNDCLOSE</value>
+			<value>TESTCANCELSHIPMENT</value>
+			<value>UPDATEORDERMEMO</value>
+			<value>UPDATEORDERPRICE</value>
+			<value>LOGISTICSCHANGED</value>
+		</enum>
+	
+		<enum name="OrderState">
+			<description>Order State</description>
+			<value>FAIL</value>
+			<value>PENDING</value>
+			<value>PROCESSED</value>
+			<value>SUCCESS</value>
+		</enum>
+		
+		<enum name="ActiveStatus">
+			<description>有效标记</description>
+			<value>ACTIVE</value>
+			<value>INACTIVE</value>
+		</enum>
+
+		<bean name="TaslyOrder" extend="com.hybris.oms.domain.order.Order">
+			<description>Tasly Order DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement(name="taslyOrder")</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="expressMemo" type="String" />
+			<property name="packing" type="PackingType" />
+			<property name="nickName" type="String" />
+			<property name="invoiceName" type="String" />
+			<property name="invoiceType" type="String" />
+			<property name="invoiceContent" type="String" />
+			<property name="deliveryService" type="DeliveryServiceType" />
+			<property name="discountFee" type="Double" />
+			<property name="totalPrice" type="Double" />
+			<property name="paymentPointAmount" type="Double" />
+			<property name="buyerMessage" type="String" />
+			<property name="sellerMessage" type="String" />
+			<property name="specialMemo" type="String" />
+			<property name="special_memo_reason" type="String" />
+			<property name="confirmReceivedTime" type="java.util.Date" />
+			<property name="channelSource" type="ChannelSource" />
+			<property name="innerSource" type="InnerSource" />
+			<property name="shippingLockStatus" type="ShippingLockStatus" />
+			<property name="shadCity" type="String" />
+			<property name="shadCitydistrict" type="String" />
+			<property name="shadInfoUpdateStatus" type="ShadInfoUpdateStatus" />
+			<property name="specialMemoUpdateStatus" type="SpecialMemoUpdateStatus" />
+			<property name="originalOrderId" type="String" />
+			<property name="approveStatus" type="ApproveStatus" />
+			<property name="paymentNo" type="String" />
+			<property name="shadMobile" type="String" />
+			<property name="replicationStatus" type="String" />
+			<property name="replicationTimes" type="java.lang.Integer" />
+			<property name="eccTaxpayerNumber" type="String" />
+			<property name="eccBankName" type="String" />
+			<property name="eccBankNumber" type="String" />
+			<property name="eccCustomerAddress" type="String" />
+			<property name="eccCustomerPhone" type="String" />
+			<property name="eccOrderId" type="String" />
+			<property name="eccModificationStatus" type="String" />
+			<property name="merchantTag" type="String" />
+			<property name="orderCreatedTime" type="Date" />
+			<property name="payment" type="Double" />
+			<property name="taslyOrderLineQuantities" type="java.util.List" generic="TaslyOrderLineQuantity" initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+		</bean>
+
+		<bean name="TaslyOrderLine" extend="com.hybris.oms.domain.order.OrderLine">
+			<description>Tasly Order Line DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="thirdPartyOrderlineId" type="String" />
+			<property name="baseQuantityUnitCode" type="String" />
+			<property name="unitDiscountFee" type="Double" />
+			<property name="giftItemFlag" type="String" />
+			<property name="refundAmount" type="Double" />
+			<property name="refundStatus" type="String" />
+			<property name="orderlinePayment" type="Double" />
+			<property name="refundFlag" type="String" />
+		</bean>
+
+		<bean name="TaslyOrderLineQuantity" extend="com.hybris.oms.domain.order.OrderLineQuantity">
+			<description>Tasly Order Line Quantity DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="expressName" type="String" />
+			<property name="expressOrderId" type="String" />
+			<property name="expressCode" type="String" />
+			<property name="refundStatus" type="String" />
+		</bean>
+
+		<bean name="TaslyPaymentInfo" extend="com.hybris.oms.domain.order.PaymentInfo">
+			<description>Tasly payment info DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="issueDate" type="java.util.Date" />
+		</bean>
+
+		<bean name="TaslyShippingAndHandling" extend="com.hybris.oms.domain.shipping.ShippingAndHandling">
+			<description>Tasly Shipping And Handling DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="shpr_insurance" type="Double" />
+		</bean>
+
+		<bean name="Express" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Express DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="code" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+			<property name="name" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.code;
+	}
+				]]>
+			</customCode>
+		</bean>
+
+		<bean name="ExpressItem" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Express item DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="skuid" type="String"/>
+			<property name="channelSource" type="String" />
+			<property name="innerSource" type="String" />
+			<property name="expressCode" type="String" />
+			<property name="status" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.skuid+"|"+this.channelSource+"|"+this.innerSource;
+	}
+				]]>
+			</customCode>
+		</bean>
+
+		<bean name="Expresslocation" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Express Location DTO</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="province" type="String"/>
+			<property name="channelSource" type="String" />
+			<property name="innerSource" type="String" />
+			<property name="expressCode" type="String" />
+
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.province+"|"+this.channelSource+"|"+this.innerSource;
+	}
+				]]>
+			</customCode>
+		</bean>
+
+		<!-- TS-1033 expressitem add by Jhm Begin <bean name="ExpressItem" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto"> 
+			<description>Express Item DTO</description> <annotations> <value>@javax.xml.bind.annotation.XmlRootElement</value> 
+			<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value> 
+			</annotations> <property name="province" type="String"> <annotations> <value>@javax.xml.bind.annotation.XmlID</value> 
+			</annotations> </property> <property name="channelSource" type="String" /> 
+			<property name="innerSource" type="String" /> <property name="expressCode" 
+			type="String" /> <customCode> <![CDATA[ @Override public String getId() { 
+			return this.skuid; } ]]> </customCode> </bean> -->
+			
+		<!-- SkuToProduct add by handong 2015-01-07 -->
+		<bean name="SkuToProduct" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>DTO for skuToProductList</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="id" type="String" />
+			<property name="channel" type="String" />
+			<property name="outerId" type="String" />
+			<property name="itemId" type="String" />
+			<property name="itemName" type="String" />
+			<property name="quantity" type="int" />
+			<property name="ratio" type="double" />
+			<property name="innerSource" type="String" />
+			<property name="percent" type="int" />
+			<property name="lockStatus" type="String" />
+		</bean>
+		
+		<!-- SkuToProduct add by handong 2015-01-07 -->
+		<bean name="UISkuToProduct" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>DTO for UIskuToProduct</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="channel" type="String" />
+			<property name="outerId" type="String" />
+			<property name="innerSource" type="String" />
+			<property name="lockStatus" type="String" />
+			<customCode>
+				<![CDATA[
+				@Override
+				public String getId()
+				{
+					return this.outerId;
+				}
+				]]>
+			</customCode>
+		</bean>
+
+		<enum name="TaslyOrderQuerySupport">
+			<description>Columns to sort the orders query by</description>
+			<value>DEFAULT</value>
+			<value>FIRST_NAME</value>
+			<value>LAST_NAME</value>
+			<value>ORDER_DATE</value>
+			<value>ORDER_ID</value>
+			<value>SCHEDULED_SHIPPING_DATE</value>
+			<value>BUYER_MESSAGE</value>
+			<value>SELLER_MESSAGE</value>
+			<value>PACKING</value>
+			<value>ORIGINAL_ORDER_ID</value>
+			<value>APPROVE_STATUS</value>
+		</enum>
+
+		<bean name="PendingOrder" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>DTO for Pending Orders</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="tid" type="String" />
+			<property name="oid" type="String" />
+			<property name="refundFee" type="double" />
+			<property name="eventType" type="EventType" />
+			<property name="errorMsg" type="String" />
+			<property name="state" type="OrderState" />
+			<property name="rawMsg" type="String" />
+			<!-- TS-1035 add by GaoXin  -->
+			<property name="innerSource" type="InnerSource" />
+			<property name="channelSource" type="ChannelSource" />
+			<!-- TS-1035 add by GaoXin  done-->
+			<pk>
+				<attribute name="tid" />
+				<attribute name="oid" />
+				<attribute name="eventType" />
+			</pk>
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.tid + "|" + this.oid + "|" + this.eventType.toString();
+	}
+				]]>
+			</customCode>
+		</bean>
+		
+		<enum name="ExpressQuerySupport">
+			<description>Columns to sort the express query by</description>
+			<value>DEFAULT</value>
+			<value>NAME</value>
+			<value>CODE</value>
+		</enum>
+		
+		<enum name="ExpressLocationQuerySupport">
+			<description>Columns to sort the expressLocation query by</description>
+			<value>DEFAULT</value>
+			<value>PROVINCE</value>
+			<value>CODE</value>
+			<value>CHANNEL</value>
+			<value>INNER</value>
+		</enum>
+		
+		<enum name="SkuToProductQuerySupport">
+			<description>Columns to sort the skutoproduct query by</description>
+			<value>DEFAULT</value>
+			<value>ITEMID</value>
+			<value>RATIO</value>
+			<value>ITEMNAME</value>
+			<value>OUTERID</value>
+			<value>INNERSOURCE</value>
+			<value>QUANTITY</value>
+			<value>CHANNEL</value>
+		</enum>
+		
+		<!-- TS-1033 expressitem add by Jhm Begin -->
+		<enum name="ExpressItemQuerySupport">
+			<description>Columns to sort the expressItems query by</description>
+			<value>DEFAULT</value>
+			<value>SKUID</value>
+			<value>CODE</value>
+			<value>INNER</value>
+			<value>CHANNEL</value>
+			<value>STATUS</value>
+		</enum>
+		<!-- TS-1033 expressitem add by Jhm End -->
+	</package>
+	<package name="tasly.greathealth.oms.api.financial.dto">
+		<bean name="TaslyFinancialReport" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>DTO for Tasly Financial Report</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="originalOrderId" type="String" />
+			<!--  <property name="sevenPrice" type="double" />
+			<property name="semPrice" type="double" />
+			<property name="qptaPrice" type="double" />
+			<property name="qptbPrice" type="double" />
+			<property name="zjpcPrice" type="double" />
+			<property name="sajtPrice" type="double" />
+			<property name="kzfjPrice" type="double" />
+			<property name="selfPrice" type="double" />
+			<property name="freight" type="double" />
+			<property name="totalPrice" type="double" />
+			<property name="endPrice" type="String" />
+			<property name="priceMap" type="map" />  -->
+           	<property name="priceMap" type="java.util.Map" generic="String, Double" initValue="new java.util.HashMap()">
+				<annotations>
+       				<value>@javax.xml.bind.annotation.XmlElement(required = false)</value>
+       				<value>@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(tasly.greathealth.oms.xml.bind.MapDoubleAdapter.class)</value>
+       			</annotations>
+			</property>
+	     	<property name="freight" type="double" />
+			<property name="totalPrice" type="double" />
+			<property name="endPrice" type="String" />
+			<pk>
+				<attribute name="originalOrderId" />
+			</pk>
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.originalOrderId;
+	}
+				]]>
+			</customCode>
+		</bean>
+	</package>
+</beans>

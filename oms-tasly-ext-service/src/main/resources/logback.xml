@@ -1,0 +1,58 @@
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d [%-5level][%t][%c]Line:[%L][%X{tenant}][%X{requestId}] %m%n</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<File>${catalina.base}/logs/tasly-oms.log</File>
+		<Prudent>true</Prudent>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base}/logs/tasly-oms-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+			<MaxHistory>10</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>512MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d [%-5level][%t][%c]Line:[%L][%X{tenant}][%X{requestId}] %m%n</pattern>
+		</encoder>
+		<!--
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+		</layout>
+		-->
+	</appender>
+
+	<logger name="javax.validation" level="info" />
+
+	<logger name="org.springframework.beans.factory" level="warn" />
+	<logger name="org.springframework.transaction" level="info" />
+	<logger name="org.springframework.validation" level="info" />
+	<logger name="org.springframework.test" level="warn" />
+	<logger name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor" level="trace" appender-ref="STDOUT" />
+
+	<logger name="com.hybris.oms" level="trace" />
+	<logger name="com.hybris.kernel" level="info" />
+
+	<logger name="com.hybris.commons" level="debug" />
+
+	<logger name="httpclient.wire.content" level="debug" />
+	<logger name="httpclient.wire.header" level="debug" />
+	<logger name="com.hybris.oms.service.ats" level="debug" />
+	<logger name="com.hybris.oms.service.sourcing" level="debug" />
+
+	<!-- DB statements -->
+	<logger name="com.hybris.kernel.engine.jdbc.JDBCPersistenceEngine" level="info" />
+	<logger name="com.hybris" level="info" />
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" level="info" />
+
+	<logger name="tasly.greathealth.oms" level="info" />
+
+	<root level="info">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

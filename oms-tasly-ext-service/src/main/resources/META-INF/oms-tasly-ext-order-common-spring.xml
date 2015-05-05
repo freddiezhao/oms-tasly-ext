@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Tasly Order reverse converter start -->
+	<!-- Replace the default order reverse converter with the new one to make it to handle extended TaslyOrderData -->
+	<alias name="defaultOrderReverseConverter" alias="orderReverseConverter" />
+	<bean id="defaultOrderReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyOrderMO" />
+		<property name="populator" ref="orderReversePopulator" />
+	</bean>
+
+	<bean name="taslyOrderMO" parent="orderMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">tasly.greathealth.oms.domain.order.TaslyOrderData</value>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="propertyAwareOrderReversePopulator" alias="orderReversePopulator" />
+	<bean id="propertyAwareOrderReversePopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultOrderReversePopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+				<ref bean="taslyOrderReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="taslyOrderReversePopulator" class="tasly.greathealth.oms.order.conversion.TaslyOrderReversePopulator" />
+	<!-- Tasly Order converter end -->
+
+	<!-- Tasly Order Line converter start -->
+	<!-- Replace the default order line reverse converter with the new one to make it to handle extended TaslyOrderLineData -->
+	<alias name="defaultOrderLineReverseConverter" alias="orderLineReverseConverter" />
+	<bean id="defaultOrderLineReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyOrderLineMO" />
+		<property name="populator" ref="orderLineReversePopulator" />
+	</bean>
+
+	<bean name="taslyOrderLineMO" parent="orderLineMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">tasly.greathealth.oms.domain.order.TaslyOrderLineData</value>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="propertyAwareOrderLineReversePopulator" alias="orderLineReversePopulator" />
+	<bean id="propertyAwareOrderLineReversePopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultOrderLineReversePopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+				<ref bean="taslyOrderLineReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="taslyOrderLineReversePopulator" class="tasly.greathealth.oms.order.conversion.TaslyOrderLineReversePopulator" />
+	<!-- Tasly Order Line converter end -->
+
+	<!-- Tasly Order Line Quantity converter start -->
+	<!-- Replace the default order line quantity reverse converter with the new one to make it to handle extended TaslyOrderLineQuantityData -->	
+	<alias name="defaultOrderLineQuantityReverseConverter" alias="orderLineQuantityReverseConverter" />
+	<bean id="defaultOrderLineQuantityReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyOrderLineQuantityMO" />
+		<property name="populator" ref="orderLineQuantityReversePopulator" />
+	</bean>
+
+	<bean name="taslyOrderLineQuantityMO" parent="orderLineQuantityMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">tasly.greathealth.oms.domain.order.TaslyOrderLineQuantityData</value>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="propertyAwareOrderLineQuantityReversePopulator" alias="orderLineQuantityReversePopulator" />
+	<bean id="propertyAwareOrderLineQuantityReversePopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultOrderLineQuantityReversePopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+				<ref bean="taslyOrderLineQuantityReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="taslyOrderLineQuantityReversePopulator" class="tasly.greathealth.oms.order.conversion.TaslyOrderLineQuantityReversePopulator" />
+	<!-- Tasly Order Line Quantity converter end -->
+
+	<!-- Tasly Order Payment Info converter start -->
+	<!-- Replace the default paymentinfo reverse converter with the new one to make it to handle extended TaslyPaymentInfoData -->
+	<alias name="defaultPaymentInfoReverseConverter" alias="paymentInfoReverseConverter" />
+	<bean id="defaultPaymentInfoReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyPaymentInfoMO" />
+		<property name="populator" ref="paymentInfoReversePopulator" />
+	</bean>
+
+	<bean name="taslyPaymentInfoMO" parent="paymentInfoMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">tasly.greathealth.oms.domain.order.TaslyPaymentInfoData</value>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="propertyAwarePaymentInfoReversePopulator" alias="paymentInfoReversePopulator" />
+	<bean id="propertyAwarePaymentInfoReversePopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultPaymentInfoReversePopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+				<ref bean="taslyPaymentInfoReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="taslyPaymentInfoReversePopulator" class="tasly.greathealth.oms.order.conversion.TaslyPaymentInfoReversePopulator"></bean>
+	<!-- Tasly Order Payment Info converter end -->
+
+	<!-- Tasly Order ShippingAndHandling converter start -->
+	<alias name="defaultShippingAndHandlingReverseConverter" alias="shippingAndHandlingReverseConverter" />
+	<bean id="defaultShippingAndHandlingReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyShippingAndHandlingMO" />
+		<property name="populator" ref="shippingAndHandlingReversePopulator" />
+	</bean>
+
+	<bean name="taslyShippingAndHandlingMO" parent="shippingAndHandlingMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">tasly.greathealth.oms.domain.order.TaslyShippingAndHandlingData</value>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="propertyAwareShippingAndHandlingReversePopulator" alias="shippingAndHandlingReversePopulator" />
+	<bean id="propertyAwareShippingAndHandlingReversePopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultShippingAndHandlingReversePopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+				<ref bean="taslyShippingAndHandlingReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean name="taslyShippingAndHandlingReversePopulator" class="tasly.greathealth.oms.order.conversion.TaslyShippingAndHandlingReversePopulator" />
+	<!-- Tasly Order ShippingAndHandling Info converter end -->
+
+	<!-- Tasly Order Query Factory start -->
+	<alias name="taslyDefaultOrderQueryFactory" alias="orderQueryFactory" />
+	<bean id="taslyDefaultOrderQueryFactory" class="tasly.greathealth.oms.order.services.impl.TaslyOrderQueryFactory" parent="defaultOrderQueryFactory" />
+	<!-- Tasly Order Query Factory end -->
+
+	<!-- Tasly Shipment Query Factory start -->
+	<alias name="taslyShipmentQueryFactory" alias="shipmentQueryFactory" />
+	<bean id="taslyShipmentQueryFactory" class="tasly.greathealth.oms.shipment.services.impl.TaslyShipmentQueryFactory" parent="defaultShipmentQueryFactory" />
+	<!-- Tasly Shipment Query Factory end -->
+
+	<!-- Tasly Order Converter start -->
+	<alias name="defaultOrderConverter" alias="orderConverter" />
+	<bean id="defaultOrderConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyOrderDTO" />
+		<property name="populator" ref="orderPopulator" />
+	</bean>
+
+	<!-- TODO: Why need this config????? -->
+	<alias name="compositeOrderPopulator" alias="orderPopulator" />
+	<bean id="compositeOrderPopulator" parent="compositePopulator">
+		<property name="populators" ref="compositeOrderPopulatorList" />
+	</bean>
+
+	<util:list id="compositeOrderPopulatorList">
+		<ref bean="defaultOrderPopulator" />
+		<ref bean="defaultActionableOrderPopulator" />
+		<ref bean="taslyDefaultOrderPopulator" />
+	</util:list>
+
+	<bean id="taslyDefaultOrderPopulator" class="tasly.greathealth.oms.order.conversion.TaslyOrderPopulator" />
+	<bean id="taslyOrderDTO" class="tasly.greathealth.oms.api.order.dto.TaslyOrder" scope="prototype" />
+	<!-- Tasly Order Converter end -->
+
+	<!-- Tasly Order Line Converter start -->
+	<alias name="defaultOrderLineConverter" alias="orderLineConverter" />
+	<bean id="defaultOrderLineConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyOrderLineDTO" />
+		<property name="populator" ref="orderLinePopulator" />
+	</bean>
+
+	<util:list id="compositeOrderLinePopulatorList">
+		<ref bean="defaultOrderLinePopulator" />
+		<ref bean="taslyDefaultOrderLinePopulator" />
+	</util:list>
+
+	<bean id="taslyDefaultOrderLinePopulator" class="tasly.greathealth.oms.order.conversion.TaslyOrderLinePopulator" />
+	<bean id="taslyOrderLineDTO" class="tasly.greathealth.oms.api.order.dto.TaslyOrderLine" scope="prototype" />
+	<!-- Tasly Order Line Converter end -->
+
+	<!-- Tasly Order Line Quantity Converter start -->
+	<alias name="defaultOrderLineQuantityConverter" alias="orderLineQuantityConverter" />
+	<bean id="defaultOrderLineQuantityConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyOrderLineQuantityDTO" />
+		<property name="populator" ref="orderLineQuantityPopulator" />
+	</bean>
+
+	<util:list id="compositeOrderLineQuantityPopulatorList">
+		<ref bean="defaultOrderLineQuantityPopulator" />
+		<ref bean="taslyDefaultOrderLineQuantityPopulator" />
+	</util:list>
+
+	<bean id="taslyOrderLineQuantityDTO" class="tasly.greathealth.oms.api.order.dto.TaslyOrderLineQuantity" scope="prototype" />
+	<bean id="taslyDefaultOrderLineQuantityPopulator" class="tasly.greathealth.oms.order.conversion.TaslyOrderLineQuantityPopulator">
+		<property name="taslyOrderService" ref="taslyOrderService" />
+	</bean>
+	<!-- Tasly Order Line Quantity Converter end -->
+
+	<!-- Tasly PaymentInfo Converter start -->
+	<alias name="defaultPaymentInfoConverter" alias="paymentInfoConverter" />
+	<bean id="defaultPaymentInfoConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyPaymentInfoDTO" />
+		<property name="populator" ref="paymentInfoPopulator" />
+	</bean>
+
+	<util:list id="compositePaymentInfoPopulatorList">
+		<ref bean="defaultPaymentInfoPopulator" />
+		<ref bean="taslyDefaultPaymentInfoPopulator" />
+	</util:list>
+
+	<bean id="taslyPaymentInfoDTO" class="tasly.greathealth.oms.api.order.dto.TaslyPaymentInfo" scope="prototype" />
+	<bean id="taslyDefaultPaymentInfoPopulator" class="tasly.greathealth.oms.order.conversion.TaslyPaymentInfoPopulator" />
+	<!-- Tasly PaymentInfo Converter end -->
+
+	<!-- Tasly ShippingHandling start -->
+	<alias name="defaultShippingAndHandlingConverter" alias="shippingAndHandlingConverter" />
+	<bean id="defaultShippingAndHandlingConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyShippingAndHandlingDTO" />
+		<property name="populator" ref="shippingAndHandlingPopulator" />
+	</bean>
+
+	<util:list id="compositeShippingAndHandlingPopulatorList">
+		<ref bean="defaultShippingAndHandlingPopulator" />
+		<ref bean="taslyDefaultShippingAndHandlingPopulator" />
+	</util:list>
+
+	<bean id="taslyShippingAndHandlingDTO" class="tasly.greathealth.oms.api.order.dto.TaslyShippingAndHandling" scope="prototype" />
+	<bean id="taslyDefaultShippingAndHandlingPopulator" class="tasly.greathealth.oms.order.conversion.TaslyShippingAndHandlingPopulator" />
+	<!-- Tasly ShippingHandling end -->
+
+	<!-- Added by gxx for ui order populator End -->
+	<!-- Populators -->
+	<alias name="compositeUIOrderPopulator" alias="uIOrderPopulator" />
+	<bean id="compositeUIOrderPopulator" parent="compositePopulator">
+		<property name="populators" ref="compositeUIOrderPopulatorList" />
+	</bean>
+	<bean id="defaultUITaslyOrderTaslyPopulator" class="tasly.greathealth.oms.order.conversion.UITaslyOrderPopulator" />
+	<util:list id="compositeUIOrderPopulatorList">
+		<ref bean="defaultUIOrderPopulator" />
+		<ref bean="defaultUITaslyOrderTaslyPopulator" />
+	</util:list>
+
+	<!-- Added by Henter Liu for ui shipment populator End -->
+	<!-- Populators -->
+	<alias name="compositeUIShipmentPopulator" alias="uiShipmentPopulator" />
+	<bean id="compositeUIShipmentPopulator" parent="compositePopulator">
+		<property name="populators" ref="compositeUIShipmentPopulatorList" />
+	</bean>
+	<bean id="defaultActionableShipmentPopulator" class="com.hybris.oms.facade.conversion.common.ActionablePopulator">
+		<property name="workflowExecutor" ref="shipmentWorkflowExecutor" />
+	</bean>
+	<bean id="defaultUITaslyShipmentPopulator" class="tasly.greathealth.oms.shipment.conversion.UITaslyShipmentPopulator">
+		<property name="taslyOrderService" ref="taslyOrderService" />
+	</bean>
+	<util:list id="compositeUIShipmentPopulatorList">
+		<ref bean="defaultUiShipmentPopulator" />
+		<ref bean="defaultUIActionableShipmentPopulator" />
+		<ref bean="defaultUITaslyShipmentPopulator" />
+	</util:list>
+
+	<!-- Add by Henter Liu for export order start -->
+	<alias name="defaultExportOrderLineQuantityPopulator" alias="exportOrderLineQuantityPopulator" />
+	<bean id="defaultExportOrderLineQuantityPopulator" class="tasly.greathealth.oms.export.order.conversion.ExportOrderLineQuantityPopulator" />
+	<bean id="exportOrderLineQuantityDTO" class="tasly.greathealth.oms.export.api.order.dto.ExportOrderLineQuantity" scope="prototype" />
+
+	<alias name="defaultExportOrderLineQuantityConverter" alias="exportOrderLineQuantityConverter" />
+	<bean id="defaultExportOrderLineQuantityConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="exportOrderLineQuantityDTO" />
+		<property name="populator" ref="exportOrderLineQuantityPopulator" />
+	</bean>
+
+	<alias name="defaultExportOrderLinePopulator" alias="exportOrderLinePopulator" />
+	<bean id="defaultExportOrderLinePopulator" class="tasly.greathealth.oms.export.order.conversion.ExportOrderLinePopulator">
+		<property name="converters" ref="converters" />
+		<property name="exportOrderLineQuantityConverter" ref="exportOrderLineQuantityConverter" />
+	</bean>
+	<bean id="exportOrderLineDTO" class="tasly.greathealth.oms.export.api.order.dto.ExportOrderLine" scope="prototype" />
+
+	<alias name="defaultExportOrderLineConverter" alias="exportOrderLineConverter" />
+	<bean id="defaultExportOrderLineConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="exportOrderLineDTO" />
+		<property name="populator" ref="exportOrderLinePopulator" />
+	</bean>
+
+	<alias name="defaultExportOrderPopulator" alias="exportOrderPopulator" />
+	<bean id="defaultExportOrderPopulator" class="tasly.greathealth.oms.export.order.conversion.ExportOrderPopulator">
+		<property name="converters" ref="converters" />
+		<property name="exportOrderLineConverter" ref="exportOrderLineConverter" />
+	</bean>
+	<bean id="exportOrderDTO" class="tasly.greathealth.oms.export.api.order.dto.ExportOrder" scope="prototype" />
+
+	<alias name="defaultExportOrderConverter" alias="exportOrderConverter" />
+	<bean id="defaultExportOrderConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="exportOrderDTO" />
+		<property name="populator" ref="exportOrderPopulator" />
+	</bean>
+
+	<alias name="defaultExportOrderFacade" alias="exportOrderFacade" />
+	<bean id="defaultExportOrderFacade" class="tasly.greathealth.oms.export.order.facades.impl.DefaultExportOrderFacade">
+		<property name="orderService" ref="orderService" />
+		<property name="queryObjectValidator" ref="queryObjectValidator" />
+		<property name="exportOrderConverter" ref="exportOrderConverter" />
+		<property name="converters" ref="converters" />
+		<property name="entityValidationHandler" ref="entityValidationHandler" />
+	</bean>
+	<!-- Add by Henter Liu for export order end -->
+
+	<!-- Add by Henter Liu for pending order start -->
+	<alias name="defaultPendingOrderService" alias="pendingOrderService" />
+	<bean id="defaultPendingOrderService" class="tasly.greathealth.oms.order.services.impl.DefaultPendingOrderService">
+		<property name="pendingOrderQueries" ref="pendingOrderQueryFactory" />
+	</bean>
+
+	<alias name="defaultPendingOrderQueryFactory" alias="pendingOrderQueryFactory" />
+	<bean id="defaultPendingOrderQueryFactory" class="tasly.greathealth.oms.order.services.impl.PendingOrderQueryFactory"
+		parent="abstractQueryFactory" />
+
+	<alias name="defaultPendingOrderPopulator" alias="pendingOrderPopulator" />
+	<bean id="defaultPendingOrderPopulator" class="tasly.greathealth.oms.order.conversion.PendingOrderPopulator" />
+	<bean id="pendingOrderDTO" class="tasly.greathealth.oms.api.order.dto.PendingOrder" scope="prototype" />
+
+	<alias name="defaultPendingOrderConverter" alias="pendingOrderConverter" />
+	<bean id="defaultPendingOrderConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="pendingOrderDTO" />
+		<property name="populator" ref="pendingOrderPopulator" />
+	</bean>
+
+	<alias name="defaultPendingOrderFacade" alias="pendingOrderFacade" />
+	<bean id="defaultPendingOrderFacade" class="tasly.greathealth.oms.order.facades.impl.DefaultPendingOrderFacade">
+		<property name="pendingOrderService" ref="pendingOrderService" />
+		<property name="pendingOrderConverter" ref="pendingOrderConverter" />
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverService"/>
+		<property name="converters" ref="converters" />
+	</bean>
+	<!-- Add by Henter Liu for pending order end -->
+	
+	<!-- Add by GaoXin for TS-1035 pending order -->
+	<bean id="pendingOrderFacadeForTmallJSC" class="tasly.greathealth.oms.order.facades.impl.DefaultPendingOrderFacade" parent="pendingOrderFacade">
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverServiceTmallJSC"/>
+	</bean>
+	
+</beans>

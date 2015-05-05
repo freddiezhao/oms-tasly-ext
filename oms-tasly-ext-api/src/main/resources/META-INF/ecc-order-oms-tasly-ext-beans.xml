@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.hybris.com/schema/onpremise/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/onpremise/beans http://www.hybris.com/schema/onpremise/beans-5.3.xsd">
+
+    <!-- added by libin539 for TS-689 -->
+	<!-- OMS Order update DTO-->
+	<package name="tasly.greathealth.erp.api.order.updateorder.dto">
+
+		<bean name="Shipto" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>SHIPTO DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="eccShiptoId" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+
+			<property name="eccShiptoName" type="String" />
+			<property name="eccShiptoRegion" type="String" />
+			<property name="eccShiptoCity" type="String" />
+			<property name="eccShiptoDistrict" type="String" />
+			<property name="eccShiptoAddress" type="String" />
+			<property name="eccShiptoZipcode" type="String" />
+			<property name="eccShiptoMob" type="String" />
+			<property name="eccShiptoTel" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.eccShiptoId;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+		
+		<bean name="EccBillto" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>ECC_BILLTO DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="eccInvoiceType" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+
+			<property name="eccInvoiceTitle" type="String" />
+			<property name="eccInvoiceContent" type="String" />
+			<property name="eccTaxpayerNumber" type="String" />
+			<property name="eccBankName" type="String" />
+			<property name="eccBankNumber" type="String" />
+			<property name="eccCustomerAddress" type="String" />
+			<property name="eccCustomerPhone" type="String" />			
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+		<bean name="EccDelivery" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>SHIPTO DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="eccExpressId" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+			<property name="eccExpressName" type="String" />
+			
+			
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.eccExpressId;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+		<bean name="Item" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>ITEM DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="refundOmsItemId" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+			<property name="refundType" type="String" />
+			<property name="refundQuantity" type="String" />
+			<property name="refundAmount" type="double" />
+			
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.refundOmsItemId;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+		
+		<!-- refund based on line level TS-168 start-->
+		<bean name="Refund" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>REFUND DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="item" type="java.util.List" generic="Item" initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+			<customCode>
+				<![CDATA[
+			@Override
+			public String getId()
+			{
+				return null;
+			}
+						]]>
+			</customCode>
+		</bean>
+		<!-- refund based on line level TS-168 end-->
+
+		<bean name="OmsOrder" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>OMSORDER DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="eccOrderId" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+			<property name="operation" type="String" />
+			<property name="omsOrderId" type="String" />
+			<property name="userNotes" type="String" />
+			<property name="csNotes" type="String" />			
+					
+			<property name="shipto" type="Shipto" />
+			<property name="eccBillto" type="EccBillto" />
+			<property name="eccDelivery" type="EccDelivery" />
+			<!-- orderlines -->
+			<property name="refund" type="Refund" />		
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.eccOrderId;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+		<bean name="OmsOrders" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>OMSORDERS DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="omsOrder" type="java.util.List" generic="OmsOrder"
+				initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>
+
+		<bean name="Message" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>MESSAGE DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="omsOrders" type="OmsOrders" >
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>
+	</package>
+	
+	<!-- added by vincent for TS-688 -->
+	          <!-- ECC order delivery number and delivery company ID update DTO -->
+	<package name="tasly.greathealth.erp.api.order.updatedelivery.dto">
+		<bean name="EccDelivery" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>deliveryinfo DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="omsOrderId" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+
+			<property name="omsLineId" type="String" />
+			<property name="skuId" type="String" />
+			<property name="skuQuantity" type="String" />
+			<property name="forwardId" type="String" />
+			<property name="deliveryNumber" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.omsOrderId;
+	}
+						]]>
+			</customCode>
+		</bean>
+
+		<bean name="Message" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>delivery DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="eccOrderDeliveries" type="java.util.List" generic="EccDelivery"
+				initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+
+			<property name="deliveryCompleted" type="String" />
+
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>
+	</package>
+	               <!-- ECC order Packing DTO -->
+	<package name="tasly.greathealth.erp.api.order.updatepacking.dto">
+
+		<bean name="Message" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>delivery DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="omsOrderIds" type="java.util.List" generic="String"
+				initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>	
+	</package>
+</beans>

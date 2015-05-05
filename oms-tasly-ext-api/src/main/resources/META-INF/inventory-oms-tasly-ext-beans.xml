@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.hybris.com/schema/onpremise/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.hybris.com/schema/onpremise/beans http://www.hybris.com/schema/onpremise/beans-5.3.xsd">
+	<!-- <package name="tasly.greathealth.oms.api.inventory.dto">
+		<bean name="TaslyItemLocation" extend="com.hybris.oms.domain.inventory.ItemLocationCurrent">
+			<description>Tasly Extended ItemLocation</description>
+			<property name="allocationPercent" type="int" />
+		</bean>
+	</package> -->
+
+	<!-- New DTO description -->
+	<package name="tasly.greathealth.oms.api.inventory.dto">
+	
+		<enum name="InventoryInnerSource">
+				<description>业态</description>
+				<value>JSC</value>
+				<value>OTC</value>
+		</enum>
+		<bean name="StockroomLocation" extend="com.hybris.oms.domain.inventory.Location">
+			<description>StockroomLocation DTO for oms-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="defaultAllocatePercent" type="int" />
+		</bean>
+		<bean name="ItemInfo" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>ItemInfo DTO for oms-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+			<property name="sku" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+			<property name="description" type="String" />
+			<property name="quantity" type="int" />
+			<property name="baseUnitCode" type="String" />
+			<property name="stockManageFlag" type="int" />
+			<property name="innerSource" type="InventoryInnerSource" />
+			<property name="oldMaterialNumber" type="String" />
+			<property name="ext1" type="String" />
+			<property name="ext2" type="String" />
+			<property name="ext3" type="String" />
+			<property name="ext4" type="String" />
+			<property name="ext5" type="String" />
+			<property name="vendor" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.sku;
+	}
+				]]>
+			</customCode>
+		</bean>
+	</package>
+</beans>

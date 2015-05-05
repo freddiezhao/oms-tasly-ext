@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<alias alias="csvSerializationService" name="taslycsvSerializationService" />
+	 <bean id="taslycsvSerializationService"
+		  class="tasly.greathealth.oms.service.serialization.TaslyCsvSerializationService">
+		<property name="csvSerializationService" ref="theDefaultCsvSerializationService" />
+		
+	</bean>
+
+
+	<bean id="theDefaultCsvSerializationService"
+		  class="com.hybris.kernel.persistence.serialization.impl.DefaultCsvSerializationService">
+		<property name="valueConverter" ref="tenantSerializationValueConverter" />
+		<property name="conversionService" ref="conversionService" />
+		<property name="typeSystem" ref="typeSystem" />
+		<property name="tenantContextService" ref="tenantContextService" />
+		<property name="locales">
+			<bean class="org.springframework.util.StringUtils"
+				  factory-method="commaDelimitedListToSet">
+				<constructor-arg type="java.lang.String" value="${csv.locales}" />
+			</bean>
+		</property>
+		<property name="emptyStringActive" value="${csv.emptyStringDefault.active}" />
+		<property name="emptyStringValue" value="${csv.emptyString}" />
+		<property name="valueTypeCreator" ref="valueTypeCreator" />
+		<property name="metadataProvider" ref="metadataProvider" />
+	</bean>
+	
+</beans>

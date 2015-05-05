@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Spring webservice template -->
+	<!-- Update ECC order -->
+	<bean id="eccOrderUpdateService"
+		class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="${erp.updateOrder.serviceInterface}" />
+		<property name="wsdlDocumentUrl" value="${erp.updateOrder.wsdlDocumentUrl}" />
+		<property name="namespaceUri" value="${erp.updateOrder.namespaceUri}" />
+		<property name="serviceName" value="${erp.updateOrder.serviceName}" />
+		<property name="lookupServiceOnStartup" value="false" />
+		<property name="portName" value="${erp.updateOrder.portName}" />
+		<property name="username" value="${erp.pi.username}" />
+		<property name="password" value="${erp.pi.password}" />
+		<property name="customProperties" ref="jaxwsCustomProperties" />
+	</bean>
+	<util:map id="jaxwsCustomProperties">
+		<entry key="com.sun.xml.ws.request.timeout">
+			<value type="java.lang.Integer">${erp.pi.timeout}</value>
+		</entry>
+		<entry key="com.sun.xml.ws.connect.timeout">
+			<value type="java.lang.Integer">${erp.pi.timeout}</value>
+		</entry>
+	</util:map>
+
+	<!-- Spring webservice template -->
+	<!-- create ECC order -->
+	<bean id="createOrderSoapService"
+		class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface"
+			value="tasly.greathealth.oms.soapclient.createorder.SIECCOMSSALESORDERCREATEOUTAsyn" />
+		<property name="wsdlDocumentUrl" value="${erp.createOrder.wsdlDocumentUrl}" />
+		<property name="namespaceUri" value="${erp.createOrder.namespaceUri}" />
+		<property name="serviceName" value="${erp.createOrder.serviceName}" />
+		<property name="lookupServiceOnStartup" value="false" />
+		<property name="portName" value="${erp.createOrder.portName}" />
+		<property name="username" value="${erp.pi.username}" />
+		<property name="password" value="${erp.pi.password}" />
+		<property name="customProperties" ref="jaxwsCustomProperties" />
+	</bean>
+	<!-- create ECC order end -->
+</beans>

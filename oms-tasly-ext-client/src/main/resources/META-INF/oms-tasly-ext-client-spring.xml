@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="itemInfoRestClient" class="tasly.greathealth.oms.client.inventory.ItemInfoRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="taslyOrderRestClient" class="tasly.greathealth.oms.client.order.TaslyOrderRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+	</bean>
+
+	<bean id="skuToProductRestClient" class="tasly.greathealth.oms.client.inventory.SkuToProductRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="taslyItemLocationRestClient" class="tasly.greathealth.oms.client.inventory.TaslyItemLocationRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+	</bean>
+
+	<bean id="exportStockRestClient" parent="abstractOmsRestClient" class="tasly.greathealth.oms.client.inventory.ExportStockRestClient"
+		autowire-candidate="false" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="taslyExpressRestClient" class="tasly.greathealth.oms.client.order.TaslyExpressRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+	</bean>
+
+	<bean id="exportOrderRestClient" parent="abstractOmsRestClient" class="tasly.greathealth.oms.client.order.ExportOrderRestClient"
+		autowire-candidate="false" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="pendingOrderRestClient" parent="abstractOmsRestClient" class="tasly.greathealth.oms.client.order.PendingOrderRestClient"
+		autowire-candidate="false" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="itemQuantityRestClient" class="tasly.greathealth.oms.client.inventory.ItemQuantityRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+	</bean>
+
+	<bean id="stockroomRestClient" parent="abstractOmsRestClient" class="tasly.greathealth.oms.client.inventory.StockroomRestClient"
+		autowire-candidate="false" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="taslyFinancialReportRestClient" parent="abstractOmsRestClient" class="tasly.greathealth.oms.client.order.TaslyFinancialReportRestClient"
+		autowire-candidate="false" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+		<property name="queryObjectRestCallPopulator" ref="omsQueryObjectRestCallPopulator" />
+	</bean>
+
+	<bean id="dataPrincipalRestClient" class="tasly.greathealth.oms.client.principal.DataPrincipalRestClient" lazy-init="true">
+		<property name="client" ref="omsGenericRestClient" />
+	</bean>
+</beans>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="defaultTaslyCronjobFacade" class="tasly.greathealth.oms.cronjob.facades.DefaultTaslyCronjobFacadeImpl">
+		<property name="taslyCronjobConfigService" ref="defaultTaslyCronjobService"/>
+		<property name="cronJobConfigConverter" ref="defaultCronJobConfigConverter"/>
+		<property name="cronJobConfigReverseConverter" ref="defaultJobConfigReverseConverter"/>
+		<property name="converters" ref="converters"/>
+	</bean>
+	
+	<bean id="defaultCronJobConfigConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="cronJobConfigDTO" />
+		<property name="populator" ref="cronJobConfigPopulator" />
+	</bean>
+		
+	<bean id="defaultJobConfigReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="cronJobConfigMO" />
+		<property name="populator" ref="cronJobConfigReversePopulator" />
+	</bean>
+	
+	<bean id="defaultTaslyCronjobService" class="tasly.greathealth.oms.cronjob.services.impl.DefaultTaslyCronjobConfigServiceImpl">
+		<property name="jobSchedulerService" ref="jobScheduler"/>
+		<property name="scheduler" ref="quartzJobScheduler"/>
+	</bean>
+	
+	<bean id="cronJobConfigPopulator" class="tasly.greathealth.oms.cronjob.conversion.TaslyCronjobConfigDataToModelPopulator"/>
+	
+	<bean id="cronJobConfigReversePopulator" class="tasly.greathealth.oms.cronjob.conversion.TaslyCronjobConfigModelToDataPopulator"/>
+	
+	<bean id="cronJobConfigDTO" class="tasly.greathealth.oms.api.job.dto.TaslyCronJobConfig" scope="prototype" />
+	
+	<bean id="cronJobConfigMO" parent="abstractMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">com.hybris.oms.domain.job.TaslyJobConfigData</value>
+			</list>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Order Common -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-order-common-spring.xml" />
+
+	<!-- erp order configer -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-service-erp-spring.xml" />
+
+	<!-- CronJob -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-service-job-spring.xml" />
+
+	<!-- TMall -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-service-tmall-spring.xml" />
+
+	<!-- WorkFlow -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-service-workflow-spring.xml" />
+
+	<!-- serialization CSV -->
+	<import
+		resource="classpath:/META-INF/oms-tasly-ext-service-serialization-spring.xml" />
+    <!-- add by libin YHD -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-service-yhd-spring.xml" />
+	<!-- add by libin JD -->
+	<import resource="classpath:/META-INF/oms-tasly-ext-service-jd-spring.xml" />
+	<!-- DataPrincipal -->
+	<import
+		resource="classpath:/META-INF/oms-tasly-ext-service-principal-spring.xml" />
+
+
+	<!-- item info start by Henter Liu -->
+	<alias name="defaultItemInfoService" alias="itemInfoService" />
+	<bean id="defaultItemInfoService"
+		class="tasly.greathealth.oms.inventory.services.impl.DefaultItemInfoService">
+		<property name="inventoryService" ref="inventoryService" />
+		<property name="stockroomLocationService" ref="stockroomLocationService" />
+		<!-- read from properties -->
+		<!-- 放开了注释 by libin -->
+		<property name="channels" value="${inventory.allocation.channel.names}" />
+		<property name="percents" value="${inventory.allocation.channel.percents}" />
+		<!-- add by libin -->
+		<property name="taslyItemLocationService" ref="taslyItemLocationService" />
+		<property name="itemInfoQueries" ref="itemInfoQueryFactory" />
+	</bean>
+
+	<alias name="defaultItemInfoFacade" alias="itemInfoFacade" />
+	<bean id="defaultItemInfoFacade"
+		class="tasly.greathealth.oms.inventory.facades.DefaultItemInfoFacade">
+		<property name="itemInfoService" ref="itemInfoService" />
+		<property name="itemInfoModelToDataConverter" ref="itemInfoModelToDataConverter" />
+		<property name="itemInfoDataToModelConverter" ref="itemInfoDataToModelConverter" />
+		<property name="converters" ref="converters" />
+	</bean>
+
+	<alias name="propertyAwareItemInfoModelToDataPopulator" alias="itemInfoModelToDataPopulator" />
+	<bean id="propertyAwareItemInfoModelToDataPopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultItemInfoModelToDataPopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultItemInfoModelToDataPopulator"
+		class="tasly.greathealth.oms.inventory.conversion.ItemInfoModelToDataPopulator" />
+
+	<bean id="itemInfoModelToDataConverter"
+		class="tasly.greathealth.oms.inventory.conversion.ItemInfoModelToDataConverter">
+		<property name="itemInfoService" ref="itemInfoService" />
+		<property name="populator" ref="itemInfoModelToDataPopulator" />
+	</bean>
+
+	<alias name="propertyAwareItemInfoDataToModelPopulator" alias="itemInfoDataToModelPopulator" />
+	<bean id="propertyAwareItemInfoDataToModelPopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultItemInfoDataToModelPopulator" />
+				<ref bean="propertyAwarePopulator" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultItemInfoDataToModelPopulator"
+		class="tasly.greathealth.oms.inventory.conversion.ItemInfoDataToModelPopulator" />
+
+	<bean id="itemInfoDataToModelConverter"
+		class="tasly.greathealth.oms.inventory.conversion.ItemInfoDataToModelConverter">
+		<property name="populator" ref="itemInfoDataToModelPopulator" />
+	</bean>
+	<!-- item info end by Henter Liu -->
+
+	<!-- ExportStock start -->
+	<alias name="defaultExportStockFacade" alias="exportStockFacade" />
+	<bean id="defaultExportStockFacade"
+		class="tasly.greathealth.oms.export.stock.facades.DefaultExportStockFacade">
+		<property name="exportStockService" ref="exportStockService" />
+		<property name="exportStockPopulator" ref="exportStockPopulator" />
+	</bean>
+
+	<alias name="defaultExportStockService" alias="exportStockService" />
+	<bean id="defaultExportStockService"
+		class="tasly.greathealth.oms.export.stock.services.impl.DefaultExportStockService">
+		<property name="itemQuantityService" ref="itemQuantityService" />
+		<property name="taslyInventoryQueryFactory" ref="taslyInventoryQueryFactory" />
+	</bean>
+	
+	<bean id="exportStockPopulator" class="tasly.greathealth.oms.export.stock.conversion.ExportStockPopulator">
+	</bean>
+	<!-- ExportStock end -->
+
+	<!-- item quantity qiuxingjie add for TS-194 -->
+	<alias name="defaultItemQuantityService" alias="itemQuantityService" />
+	<bean id="defaultItemQuantityService"
+		class="tasly.greathealth.oms.inventory.services.impl.DefaultItemQuantityService">
+		<property name="defaultAtsService" ref="defaultAtsService" />
+		<property name="taslyItemLocationService" ref="taslyItemLocationService" />
+	</bean>
+
+	<alias name="defaultItemQuantityFacade" alias="itemQuantityFacade" />
+	<bean id="defaultItemQuantityFacade"
+		class="tasly.greathealth.oms.inventory.facades.DefaultItemQuantityFacade">
+		<property name="itemInfoService" ref="itemInfoService" />
+		<property name="taslyItemLocationService" ref="taslyItemLocationService" />
+		<property name="itemQuantityService" ref="itemQuantityService" />
+	</bean>
+	<!-- item quantity end -->
+
+	<!-- TS-194 自动分配渠道库存 -->
+	<!-- create quantityUpdate cronjob add by qiuxingjie -->
+	<bean id="updateItemQuantityWorkerBean"
+		class="tasly.greathealth.oms.cronjob.UpdateItemQuantityWorkerBean">
+		<property name="itemQuantityFacade" ref="itemQuantityFacade" />
+	</bean>
+
+	<bean id="omsUpdateQuantityJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0 4 * * ?" />
+		<property name="jobParams" value="update item quantity" />
+		<property name="worker" ref="updateItemQuantityWorkerBean" />
+		<property name="registerOnStartup" value="false" />
+		<property name="scope" value="SINGLE_TENANT" />
+		<property name="tenant" value="single" />
+	</bean>
+	<!-- create quantityUpdate cronjob END -->
+
+	<!-- item location start by Henter Liu -->
+	<alias name="defaultTaslyItemLocationService" alias="taslyItemLocationService" />
+	<bean id="defaultTaslyItemLocationService"
+		class="tasly.greathealth.oms.inventory.services.impl.DefaultTaslyItemLocationService">
+		<property name="inventoryService" ref="inventoryService" />
+		<property name="taslyInventoryQueryFactory" ref="taslyInventoryQueryFactory" />
+	</bean>
+
+	<alias name="defaultTaslyItemLocationFacade" alias="taslyItemLocationFacade" />
+	<bean id="defaultTaslyItemLocationFacade"
+		class="tasly.greathealth.oms.inventory.facades.DefaultTaslyItemLocationFacade">
+		<property name="taslyItemLocationService" ref="taslyItemLocationService" />
+		<property name="taslyItemLocationModelToDataConverter" ref="taslyItemLocationModelToDataConverter" />
+		<property name="taslyItemLocationDataToModelConverter" ref="taslyItemLocationDataToModelConverter" />
+		<property name="converters" ref="converters" />
+		<!-- add by libin -->
+		<property name="itemInfoService" ref="itemInfoService" />
+	</bean>
+
+	<alias name="propertyAwareTaslyItemLocationModelToDataPopulator"
+		alias="taslyItemLocationModelToDataPopulator" />
+	<bean id="propertyAwareTaslyItemLocationModelToDataPopulator"
+		parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultTaslyItemLocationModelToDataPopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultTaslyItemLocationModelToDataPopulator"
+		class="tasly.greathealth.oms.inventory.conversion.TaslyItemLocationModelToDataPopulator">
+		<property name="locationReverseConverter" ref="locationReverseConverter" />
+		<property name="itemInfoModelToDataConverter" ref="itemInfoModelToDataConverter" />
+	</bean>
+	<bean id="taslyItemLocationModelToDataConverter"
+		class="tasly.greathealth.oms.inventory.conversion.TaslyItemLocationModelToDataConverter">
+		<property name="taslyItemLocationService" ref="taslyItemLocationService" />
+		<property name="populator" ref="taslyItemLocationModelToDataPopulator" />
+	</bean>
+
+	<!-- Tasly Inventory Query Factory start -->
+	<!-- <alias name="taslyInventoryQueryFactory" alias="taslyInventoryQueryFactory" /> -->
+	<alias name="taslyInventoryQueryFactory" alias="inventoryQueryFactory" />
+	<bean id="taslyInventoryQueryFactory" class="tasly.greathealth.oms.inventory.services.impl.TaslyInventoryQueryFactory">
+		<property name="persistenceManager" ref="persistenceManager" />
+	</bean>
+	<!-- Tasly Inventory Query Factory end -->
+
+	<bean id="taslyItemLocationDTO"
+		class="tasly.greathealth.oms.api.inventory.dto.TaslyItemLocation"
+		scope="prototype" />
+	<alias name="defaultTaslyItemLocationConverter" alias="itemLocationCurrentConverter" />
+	<bean id="defaultTaslyItemLocationConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="taslyItemLocationDTO" />
+		<property name="populator" ref="itemLocationCurrentPopulator" />
+	</bean>
+
+	<alias name="compositeItemLocationCurrentPopulator" alias="itemLocationCurrentPopulator" />
+
+	<util:list id="compositeItemLocationCurrentPopulatorList">
+		<ref bean="defaultItemLocationCurrentPopulator" />
+		<ref bean="defaultTaslyItemLocationDataToModelPopulator" />
+	</util:list>
+
+	<bean id="defaultTaslyItemLocationDataToModelPopulator"
+		class="tasly.greathealth.oms.inventory.conversion.TaslyItemLocationDataToModelPopulator">
+		<property name="itemInfoDataToModelConverter" ref="itemInfoDataToModelConverter" />
+	</bean>
+
+	<bean id="defaultTaslyOrderLinePopulator"
+		class="tasly.greathealth.oms.order.conversion.TaslyOrderLinePopulator">
+	</bean>
+
+	<bean id="taslyItemLocationDataToModelConverter"
+		class="tasly.greathealth.oms.inventory.conversion.TaslyItemLocationDataToModelConverter">
+		<property name="populator" ref="defaultTaslyItemLocationDataToModelPopulator" />
+	</bean>
+	<!-- item location end by Henter Liu -->
+
+	<bean id="omsOrderRetrieverService"
+		class="tasly.greathealth.tmall.order.services.impl.OmsOrderRetrieverServiceTmallImpl">
+		<property name="orderFacade" ref="defaultOrderFacade" />
+		<property name="orderTransformer" ref="tmallOrderTransformer" />
+		<!-- <property name="orderConvertServer" ref="tmallOrderConvertService" 
+			/> -->
+		<property name="orderConvertService" ref="tmallOrderConvertService" />
+		<property name="shipmentFacade" ref="shipmentServiceFacade" />
+		<property name="shipmentService" ref="shipmentService" />
+		<property name="client" ref="taobaoclient" />
+		<property name="converter" ref="orderConverter" />
+		<property name="defaultTmallStoreSessionkey" value="${tmall.default.sessionkey}" />
+		<property name="taslyOrderFacade" ref="taslyOrderFacade" />
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="OTC"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<property name="staticField"
+			value="tasly.greathealth.oms.domain.order.InnerSource.OTC" />
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="JSC"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<property name="staticField"
+			value="tasly.greathealth.oms.domain.order.InnerSource.JSC" />
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="omsOrderRetrieverServiceTmallJSC" parent="omsOrderRetrieverService"
+		class="tasly.greathealth.tmall.order.services.impl.OmsOrderRetrieverServiceTmallJSCImpl">
+		<property name="client" ref="taobaoJscclient" />
+		<property name="defaultTmallStoreSessionkey" value="${tmall.jsc.sessionkey}" />
+		<property name="restClient" ref="tmallRestClient" />
+	</bean>
+
+	<bean id="orderProducer2" class="tasly.greathealth.oms.producer.impl.TmallOrderProducer2"
+		destroy-method="stopProduceOrder">
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverService" />
+		<property name="tmcClient" ref="taobaoTmcClient" />
+		<property name="sendTmallMessageRelatedConfig" ref="sendTmallMessageRelatedConfig" />
+		<property name="innerSource" ref="OTC" />
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="orderProducer2ForTmallJSC" class="tasly.greathealth.oms.producer.impl.TmallOrderProducer2"
+		destroy-method="stopProduceOrder">
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverServiceTmallJSC" />
+		<property name="tmcClient" ref="taobaoTmcClientTmallJSC" />
+		<property name="sendTmallMessageRelatedConfig" ref="sendTmallMessageRelatedConfigJSC" />
+		<property name="innerSource" ref="JSC" />
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="tmallRestClient"
+		class="tasly.greathealth.tmall.order.services.impl.TmallRestClient">
+		<property name="tmallRESTUrl" value="${tmall.rest.url}" />
+	</bean>
+
+	<bean id="tmallOrderTransformer"
+		class="tasly.greathealth.oms.transformer.impl.OrderTransformerTmallImpl"></bean>
+
+	<bean id="omsOrderAutoApprovalWorkderBean"
+		class="tasly.greathealth.oms.order.cronjob.OmsOrderAutoApprovalWorkderBean">
+		<property name="taslyOrderApprovalFacade" ref="taslyOrderApprovalFacade"></property>
+	</bean>
+
+	<bean id="omsOrderAutoApprovalJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0 0/1 * * ?" />
+		<property name="jobParams" value="automatically approve qualified oms order" />
+		<property name="worker" ref="omsOrderAutoApprovalWorkderBean" />
+		<property name="registerOnStartup" value="true" />
+		<property name="scope" value="SINGLE_TENANT" />
+		<property name="tenant" value="single" />
+	</bean>
+
+	<bean id="omsOrderAutoApprovalService"
+		class="tasly.greathealth.oms.order.services.impl.OmsOrderAutoApprovalServiceImpl">
+		<property name="orderQueryFactory" ref="orderQueryFactory"></property>
+		<property name="taslyOrderService" ref="taslyOrderService"></property>
+		<property name="timeInterval" value="${oms.autoApproval.timeInterval}" />
+	</bean>
+
+	<alias name="defaultTaslyOrderApprovalFacade" alias="taslyOrderApprovalFacade" />
+	<bean id="defaultTaslyOrderApprovalFacade"
+		class="tasly.greathealth.oms.order.facades.impl.DefaultTaslyOrderApprovalFacade">
+		<property name="omsOrderAutoApprovalService" ref="omsOrderAutoApprovalService"></property>
+	</bean>
+
+   <bean id="tmallOTCSessionKey" class="java.lang.String">
+		<constructor-arg type="java.lang.String" value="${tmall.default.sessionkey}" />
+	</bean>
+	
+	<bean id="tmallJSCSessionKey" class="java.lang.String">
+		<constructor-arg type="java.lang.String" value="${tmall.jsc.sessionkey}" />
+	</bean>
+
+	<bean id="taobaoclient" class="com.taobao.api.DefaultTaobaoClient">
+		<constructor-arg type="java.lang.String" value="${tmall.default.url}" />
+		<constructor-arg type="java.lang.String" value="${tmall.default.appkey}" />
+		<constructor-arg type="java.lang.String" value="${tmall.default.appsecret}" />
+	</bean>
+
+	<!-- tmall no.1 otc shop -->
+	<bean id="taobaoOtcclient" class="com.taobao.api.DefaultTaobaoClient">
+		<constructor-arg type="java.lang.String" value="${tmall.otc.url}" />
+		<constructor-arg type="java.lang.String" value="${tmall.otc.appkey}" />
+		<constructor-arg type="java.lang.String" value="${tmall.otc.appsecret}" />
+	</bean>
+	<!-- tmall no.2 jsc shop -->
+	<bean id="taobaoJscclient" class="com.taobao.api.DefaultTaobaoClient">
+		<constructor-arg type="java.lang.String" value="${tmall.jsc.url}" />
+		<constructor-arg type="java.lang.String" value="${tmall.jsc.appkey}" />
+		<constructor-arg type="java.lang.String" value="${tmall.jsc.appsecret}" />
+	</bean>
+
+	<bean id="taobaoTmcClient" class="com.taobao.api.internal.tmc.TmcClient">
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.default.url}" />
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.default.appkey}" />
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.default.appsecret}" />
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.default.groupname}" />
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="taobaoTmcClientTmallJSC" class="com.taobao.api.internal.tmc.TmcClient">
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.jsc.url}" />
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.jsc.appkey}" />
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.jsc.appsecret}" />
+		<constructor-arg type="java.lang.String" value="${tmall.tmc.jsc.groupname}" />
+	</bean>
+
+	<!-- added by wangzhenhai -->
+	<alias name="defaultTaslyOrderService" alias="taslyOrderService" />
+	<bean id="defaultTaslyOrderService"
+		class="tasly.greathealth.oms.order.services.impl.DefaultTaslyOrderService">
+		<property name="orderQueries" ref="orderQueryFactory" />
+		<property name="tenantPreferenceService" ref="tenantPreferenceService" />
+		<property name="ruleService" ref="ruleService" />
+		<property name="shipmentService" ref="shipmentService" />
+		<property name="persistenceManager" ref="persistenceManager" />
+		<property name="taslyOrderQueryFactory" ref="taslyDefaultOrderQueryFactory" />
+		<property name="taslyOrderLinePopulator" ref="defaultTaslyOrderLinePopulator" />
+	</bean>
+
+	<alias name="defaultTaslyOrderFacade" alias="taslyOrderFacade" />
+	<bean id="defaultTaslyOrderFacade"
+		class="tasly.greathealth.oms.order.facades.impl.DefaultTaslyOrderFacade">
+		<property name="taslyOrderService" ref="taslyOrderService" />
+		<property name="taslyOrderReverseConverter" ref="defaultOrderReverseConverter" />
+		<property name="taslyOrderConverter" ref="defaultOrderConverter" />
+		<property name="updateOrderFacade" ref="updateOrderFacade" />
+	</bean>
+
+	<!-- SkuToProduct add by handong 2015-01-07 -->
+	<alias name="defaultSkuToProductFacade" alias="skuToProductFacade" />
+	<bean id="defaultSkuToProductFacade"
+		class="tasly.greathealth.tmall.order.facades.DefaultSkuToProductFacade">
+		<property name="skuToProductService" ref="skuToProductService" />
+		<property name="skuToProductModelToDataConverter" ref="skuToProductModelToDataConverter" />
+		<property name="skuToProductDataToModelConverter" ref="skuToProductDataToModelConverter" />
+		<property name="converters" ref="converters" />
+	</bean>
+
+	<alias name="defaultSkuToProductQueryFactory" alias="skuToProductQueryFactory" />
+	<bean id="defaultSkuToProductQueryFactory"
+		class="tasly.greathealth.tmall.order.services.impl.SkuToProductQueryFactory"
+		parent="abstractQueryFactory" />
+
+	<alias name="defaultSkuToProductService" alias="skuToProductService" />
+	<bean id="defaultSkuToProductService"
+		class="tasly.greathealth.tmall.order.services.impl.DefaultSkuToProductService">
+		<property name="skuToProductQueries" ref="skuToProductQueryFactory" />
+	</bean>
+
+	<bean id="skuToProductModelToDataConverter"
+		class="tasly.greathealth.tmall.order.conversion.SkuToProductModelToDataConverter">
+		<property name="skuToProductService" ref="skuToProductService" />
+		<property name="populator" ref="skuToProductModelToDataPopulator" />
+	</bean>
+	<alias name="propertyAwareSkuToProductModelToDataPopulator"
+		alias="skuToProductModelToDataPopulator" />
+	<bean id="propertyAwareSkuToProductModelToDataPopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultSkuToProductModelToDataPopulator" />
+				<ref bean="propertyAwareReversePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="defaultSkuToProductModelToDataPopulator"
+		class="tasly.greathealth.tmall.order.conversion.SkuToProductModelToDataPopulator" />
+
+	<bean id="skuToProductDataToModelConverter"
+		class="tasly.greathealth.tmall.order.conversion.SkuToProductDataToModelConverter">
+		<property name="populator" ref="skuToProductDataToModelPopulator" />
+	</bean>
+
+	<alias name="propertyAwareSkuToProductDataToModelPopulator"
+		alias="skuToProductDataToModelPopulator" />
+	<bean id="propertyAwareSkuToProductDataToModelPopulator" parent="compositePopulator">
+		<property name="populators">
+			<list>
+				<ref bean="defaultSkuToProductDataToModelPopulator" />
+				<ref bean="propertyAwarePopulator" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultSkuToProductDataToModelPopulator"
+		class="tasly.greathealth.tmall.order.conversion.SkuToProductDataToModelPopulator" />
+
+	<!-- <bean id="tmallOrderConvertService" class="tasly.greathealth.tmall.order.services.impl.TmallOrderConvertService"> 
+		<property name="skuToProductFacade" ref="skuToProductFacade" /> <property 
+		name="omsQueryDao" ref="omsQueryImpl" /> <property name="client" ref="taobaoclient" 
+		/> <property name="DEFAULT_TMALL_STORE_SESSIONKEY" value="${tmall.default.sessionkey}" 
+		/> <property name="DEFAULT_RENTS" value="${tmall.default.rents}" /> <property 
+		name="itemInfoFacade" ref="itemInfoFacade" /> </bean> -->
+
+	<bean id="abstractOrderConverter"
+		class="tasly.greathealth.thirdparty.order.AbstractOrderConverService"
+		abstract="true">
+		<property name="skuToProductFacade" ref="skuToProductFacade" />
+		<property name="omsQueryDao" ref="omsQueryImpl" />
+		<!-- <property name="itemInfoFacade" ref="itemInfoFacade" /> -->
+	</bean>
+
+	<bean id="tmallOrderConvertService"
+		class="tasly.greathealth.tmall.order.services.TmallOrderConvertSerivceImpl"
+		parent="abstractOrderConverter">
+		<property name="client" ref="taobaoclient" />
+		<property name="DEFAULT_TMALL_STORE_SESSIONKEY" value="${tmall.default.sessionkey}" />
+		<property name="DEFAULT_RENTS" value="${tmall.default.rents}" />
+	</bean>
+
+	<bean id="omsQueryImpl" class="tasly.greathealth.tmall.order.dao.impl.OmsQueryImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<!-- Added by panhui for ui order Start -->
+	<bean id="expressInfoDataToModelPopulator"
+		class="tasly.greathealth.oms.ui.order.conversion.ExpressInfoDataToModelPopulator" />
+
+	<bean id="expressInfoDataToModelConverter"
+		class="tasly.greathealth.oms.ui.order.conversion.ExpressInfoDataToModelConverter">
+		<property name="populator" ref="expressInfoDataToModelPopulator" />
+	</bean>
+
+	<alias name="defaultTaslyExpressService" alias="expressService" />
+	<bean id="defaultTaslyExpressService"
+		class="tasly.greathealth.oms.ui.order.services.impl.DefaultExpressService" />
+
+	<bean id="defaultUiExpressInfoFacade"
+		class="tasly.greathealth.oms.ui.facade.order.DefaultUiExpressFacade">
+		<property name="expressService" ref="expressService" />
+		<property name="expressInfoDataToModelConverter" ref="expressInfoDataToModelConverter" />
+		<property name="converters" ref="converters" />
+	</bean>
+	<!-- Added by panhui for ui order End -->
+
+	<!-- Added by panlin for express code, number and memo Start -->
+	<alias name="defaultTaslyOrderLineQuantityService" alias="taslyOrderLineQuantityService" />
+	<bean id="defaultTaslyOrderLineQuantityService"
+		class="tasly.greathealth.oms.order.services.impl.DefaultTaslyOrderLineQuantityService">
+		<property name="orderQueries" ref="orderQueryFactory" />
+		<property name="tenantPreferenceService" ref="tenantPreferenceService" />
+		<property name="ruleService" ref="ruleService" />
+		<property name="shipmentService" ref="shipmentService" />
+		<property name="persistenceManager" ref="persistenceManager" />
+		<property name="shipmentFacade" ref="shipmentServiceFacade" />
+		<property name="dNlogService" ref="defdnLogService" />
+	</bean>
+	<!-- Added by panlin for express code, number and memo End -->
+
+	<!-- Initialize start -->
+	<bean id="taslyInitializer" class="tasly.greathealth.system.init.TaslyInitializer"></bean>
+	<!-- Initialize end -->
+	<!-- Destroy start -->
+	<bean id="taslyDisposable" class="tasly.greathealth.system.shutdown.TaslyDisposableBean">
+		<property name="omsOrderRetrieverService" ref="omsOrderRetrieverService" />
+	</bean>
+	<!-- Destroy end -->
+
+	<!-- added by gxx Express -->
+	<alias name="defaultExpressQueryFactory" alias="expressQueryFactory" />
+	<bean id="defaultExpressQueryFactory"
+		class="tasly.greathealth.oms.order.services.impl.ExpressQueryFactory"
+		parent="abstractQueryFactory" />
+
+	<alias name="defaultExpressLocationQueryFactory" alias="expressLocationQueryFactory" />
+	<bean id="defaultExpressLocationQueryFactory"
+		class="tasly.greathealth.oms.order.services.impl.ExpressLocationQueryFactory"
+		parent="abstractQueryFactory" />
+
+	<alias name="defaultNewTaslyExpressService" alias="taslyExpressService" />
+	<bean id="defaultNewTaslyExpressService"
+		class="tasly.greathealth.oms.order.services.impl.DefaultTaslyExpressService">
+		<property name="persistenceManager" ref="persistenceManager" />
+		<property name="expressQueries" ref="expressQueryFactory" />
+		<property name="expressLocationQueries" ref="expressLocationQueryFactory" />
+		<property name="expressItemQueries" ref="expressItemQueryFactory" />
+	</bean>
+
+	<alias name="defaultTaslyExpressFacade" alias="taslyExpressFacade" />
+	<bean id="defaultTaslyExpressFacade"
+		class="tasly.greathealth.oms.order.facades.impl.DefaultTaslyExpressFacade">
+		<property name="taslyExpressService" ref="taslyExpressService" />
+		<property name="expressConverter" ref="expressConverter" />
+		<property name="expressLocationConverter" ref="expressLocationConverter" />
+		<property name="expressItemConverter" ref="expressItemConverter" />
+		<property name="expressInfoDataToModelConverter" ref="expressInfoDataToModelConverter" />
+		<property name="converters" ref="converters" />
+	</bean>
+
+	<alias name="defaultExpressPopulator" alias="expressPopulator" />
+	<bean id="defaultExpressPopulator"
+		class="tasly.greathealth.oms.order.conversion.TaslyExpressPopulator" />
+	<bean id="expressDTO" class="tasly.greathealth.oms.api.order.dto.Express"
+		scope="prototype" />
+
+	<alias name="defaultExpressLocationPopulator" alias="expressLocationPopulator" />
+	<bean id="defaultExpressLocationPopulator"
+		class="tasly.greathealth.oms.order.conversion.TaslyExpressLocationPopulator" />
+	<bean id="expressLocationDTO" class="tasly.greathealth.oms.api.order.dto.Expresslocation"
+		scope="prototype" />
+
+	<alias name="defaultExpressConverter" alias="expressConverter" />
+	<bean id="defaultExpressConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="expressDTO" />
+		<property name="populator" ref="expressPopulator" />
+	</bean>
+
+	<alias name="defaultExpressLocationConverter" alias="expressLocationConverter" />
+	<bean id="defaultExpressLocationConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="expressLocationDTO" />
+		<property name="populator" ref="expressLocationPopulator" />
+	</bean>
+	<!-- end Express -->
+
+	<bean id="clearRealmInfos"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="realmInfos" />
+		<property name="targetMethod" value="clear" />
+
+	</bean>
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+		depends-on="clearRealmInfos">
+		<property name="targetObject" ref="realmInfos" />
+		<property name="targetMethod" value="add" />
+		<property name="arguments">
+			<bean
+				class="com.hybris.oms.service.ats.impl.DefaultStatusRealmRegistry$RealmInfo">
+				<property name="globalAggregateClass"
+					value="tasly.greathealth.oms.order.services.dataaccess.AggTaslyOrderLineQuantityBySkuStatus" />
+				<property name="localAggregateClass"
+					value="tasly.greathealth.oms.order.services.dataaccess.AggTaslyOrderLineQuantityBySkuLocationStatus" />
+				<property name="realm">
+					<util:constant
+						static-field="tasly.greathealth.oms.order.services.dataaccess.TaslyOrderStatusRealm.INSTANCE" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+		depends-on="clearRealmInfos">
+		<property name="targetObject" ref="realmInfos" />
+		<property name="targetMethod" value="add" />
+		<property name="arguments">
+			<bean
+				class="com.hybris.oms.service.ats.impl.DefaultStatusRealmRegistry$RealmInfo">
+				<property name="globalAggregateClass"
+					value="com.hybris.oms.service.inventory.impl.dataaccess.AggItemQuantityByItemIdStatus" />
+				<property name="localAggregateClass"
+					value="com.hybris.oms.service.inventory.impl.dataaccess.AggItemQuantityByItemIdLocationStatus" />
+				<property name="realm">
+					<util:constant static-field="com.hybris.oms.service.ats.StatusRealm.INVENTORY" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+		depends-on="clearRealmInfos">
+		<property name="targetObject" ref="realmInfos" />
+		<property name="targetMethod" value="add" />
+		<property name="arguments">
+			<bean
+				class="com.hybris.oms.service.ats.impl.DefaultStatusRealmRegistry$RealmInfo">
+				<property name="globalAggregateClass"
+					value="com.hybris.oms.service.inventory.impl.dataaccess.AggFutureItemQuantityBySkuStatus" />
+				<property name="localAggregateClass"
+					value="com.hybris.oms.service.inventory.impl.dataaccess.AggFutureItemQuantityBySkuLocationStatus" />
+				<property name="realm">
+					<util:constant static-field="com.hybris.oms.service.ats.StatusRealm.FUTUR" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="aggregationClasses" />
+		<property name="targetMethod" value="addAll" />
+		<property name="arguments">
+			<list>
+				<value>tasly.greathealth.oms.order.services.dataaccess.AggTaslyOrderLineQuantityBySkuLocationStatus
+				</value>
+				<value>tasly.greathealth.oms.order.services.dataaccess.AggTaslyOrderLineQuantityBySkuStatus
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- added by handong -->
+	<alias name="defaultExpressService" alias="tmallExpressService" />
+	<bean name="defaultExpressService"
+		class="tasly.greathealth.tmall.order.services.impl.TmallExpressService">
+		<property name="omsQueryDao" ref="omsQueryImpl" />
+	</bean>
+
+	<bean id="sendTmallMessageRelatedConfig"
+		class="tasly.greathealth.tmall.order.domain.SendTmallMessageRelatedConfig">
+	</bean>
+
+	<!-- TS-947 Tmall JSC add by GaoXin -->
+	<bean id="sendTmallMessageRelatedConfigJSC"
+		class="tasly.greathealth.tmall.order.domain.SendTmallJSCMessageRelatedConfig">
+	</bean>
+
+	<!-- stockroomlocation start by Gxx -->
+	<alias name="defaultStockroomLocationConverter" alias="stockroomlocationConverter" />
+	<bean id="defaultStockroomLocationConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="stockroomLocationDTO" />
+		<property name="populator" ref="stockroomlocationPopulator" />
+	</bean>
+
+	<bean id="stockroomLocationDTO"
+		class="tasly.greathealth.oms.api.inventory.dto.StockroomLocation"
+		scope="prototype" />
+	<bean id="defaultTaslyStockLocationPopulator"
+		class="tasly.greathealth.oms.inventory.conversion.TaslyStockroomLocationDataToModelPopulator" />
+
+	<alias name="compositeStockroomLocationPopulator" alias="stockroomlocationPopulator" />
+	<bean id="compositeStockroomLocationPopulator" parent="compositePopulator">
+		<property name="populators" ref="compositeStockroomLocationPopulatorList" />
+	</bean>
+	<util:list id="compositeStockroomLocationPopulatorList">
+		<ref bean="defaultLocationPopulator" />
+		<ref bean="defaultTaslyStockLocationPopulator" />
+	</util:list>
+
+	<alias name="defaultStockroomLocationQueryFactory" alias="stockroomLocationQueryFactory" />
+	<bean id="defaultStockroomLocationQueryFactory"
+		class="tasly.greathealth.oms.inventory.services.impl.StockroomLocationQueryFactory"
+		parent="abstractQueryFactory">
+		<property name="persistenceManager" ref="persistenceManager" />
+	</bean>
+
+	<alias name="defaultStockroomLocationService" alias="stockroomLocationService" />
+	<bean id="defaultStockroomLocationService"
+		class="tasly.greathealth.oms.inventory.services.impl.DefaultStockroomLocationServiceImpl">
+		<property name="stockroomLocationQueries" ref="stockroomLocationQueryFactory" />
+		<property name="persistenceManager" ref="persistenceManager" />
+	</bean>
+
+	<alias name="defaultTaslyStockroomLocationFacade" alias="taslyStockroomLocationFacade" />
+	<bean id="defaultTaslyStockroomLocationFacade"
+		class="tasly.greathealth.oms.inventory.facades.DefaultTaslyStockroomLocationFacade">
+		<property name="stockroomLocationService" ref="stockroomLocationService" />
+		<property name="locationConverter" ref="stockroomlocationConverter" />
+		<property name="converters" ref="converters" />
+		<property name="queryObjectValidator" ref="queryObjectValidator" />
+		<property name="entityValidationHandler" ref="entityValidationHandler" />
+		<property name="locationReversePopulator" ref="stockroomlocationReversePopulator" />
+		<property name="locationValidator" ref="locationValidator" />
+	</bean>
+	<!-- stockroomlocation end by Gxx -->
+
+	<!-- stockroomlocation start by Liang Weng -->
+	<bean id="defaultTaslyStockLocationReversePopulator"
+		class="tasly.greathealth.oms.inventory.conversion.TaslyStockroomLocationModelToDataPopulator" />
+
+	<alias name="compositeStockroomLocationReversePopulator" alias="stockroomlocationReversePopulator" />
+	<bean id="compositeStockroomLocationReversePopulator" parent="compositePopulator">
+		<property name="populators"
+			ref="compositeStockroomLocationReversePopulatorList" />
+	</bean>
+	<util:list id="compositeStockroomLocationReversePopulatorList">
+		<ref bean="defaultLocationReversePopulator" />
+		<ref bean="defaultTaslyStockLocationReversePopulator" />
+	</util:list>
+	<!-- stockroomlocation end by Liang Weng -->
+	<!-- taslyFinancialReportFacade start by gxx -->
+	<alias name="defaultTaslyFinancialReportFacade" alias="taslyFinancialReportFacade" />
+	<bean id="defaultTaslyFinancialReportFacade"
+		class="tasly.greathealth.oms.export.financial.facades.impl.DefaulTaslyFinancialReportFacade">
+		<property name="taslyOrderService" ref="taslyOrderService" />
+		<property name="itemInfoService" ref="itemInfoService" />
+		<property name="DEFAULT_RENTS" value="${tmall.report.rents}" />
+	</bean>
+	<!-- taslyFinancialReportFacade end by gxx -->
+	<!-- TS-1033 added by jhm Begin ExpressItem -->
+	<alias name="defaultExpressItemQueryFactory" alias="expressItemQueryFactory" />
+	<bean id="defaultExpressItemQueryFactory"
+		class="tasly.greathealth.oms.order.services.impl.ExpressItemQueryFactory"
+		parent="abstractQueryFactory" />
+
+	<alias name="defaultExpressItemPopulator" alias="expressItemPopulator" />
+	<bean id="defaultExpressItemPopulator"
+		class="tasly.greathealth.oms.order.conversion.TaslyExpressItemPopulator" />
+	<bean id="expressItemDTO" class="tasly.greathealth.oms.api.order.dto.ExpressItem"
+		scope="prototype" />
+
+	<alias name="defaultExpressItemConverter" alias="expressItemConverter" />
+	<bean id="defaultExpressItemConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="expressItemDTO" />
+		<property name="populator" ref="expressItemPopulator" />
+	</bean>
+	<!-- TS-1033 added by end ExpressItem -->
+</beans>

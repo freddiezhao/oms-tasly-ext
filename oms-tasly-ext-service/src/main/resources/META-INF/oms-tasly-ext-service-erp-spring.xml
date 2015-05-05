@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<alias name="taslyOrderQueryFactory" alias="erpOrderQueryFactory" />
+	<bean id="taslyOrderQueryFactory"
+		class="tasly.greathealth.erp.order.services.impl.TaslyOrderQueryFactory">
+		<property name="persistenceManager" ref="persistenceManager" />
+	</bean>
+
+	<!-- erp code mapping converter -->
+	<bean id="defaultErpCodeMappingConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="erpCodeMappingDTO" />
+		<property name="populator" ref="erpCodeMappingPopulator" />
+	</bean>
+
+	<bean id="defaultErpCodeMappingReverseConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="erpCodeMappingMO" />
+		<property name="populator" ref="erpCodeMappingReversePopulator" />
+	</bean>
+
+	<bean id="erpCodeMappingPopulator"
+		class="tasly.greathealth.erp.order.conversion.ErpCodeMappingDataToModelPopulator" />
+
+	<bean id="erpCodeMappingReversePopulator"
+		class="tasly.greathealth.erp.order.conversion.ErpCodeMappingModelToDataPopulator" />
+
+	<bean id="erpCodeMappingDTO"
+		class="tasly.greathealth.erp.api.codeMapping.dto.ErpCodeMapping"
+		scope="prototype" />
+
+	<bean id="erpCodeMappingMO" parent="abstractMO">
+		<property name="arguments">
+			<list>
+				<value type="java.lang.Class">tasly.greathealth.oms.domain.erp.ErpCodeMappingData
+				</value>
+			</list>
+		</property>
+	</bean>
+	<!-- end -->
+	<!-- TS-396:hybris/OMS订单下行同步至ERP接口 ST -->
+	<alias name="defaultOrderDeliveryStatusUpdateService" alias="orderDeliveryStatusUpdateService" />
+	<bean id="defaultOrderDeliveryStatusUpdateService"
+		class="tasly.greathealth.erp.order.services.impl.DefaultOrderDeliveryStatusUpdateService">
+		<property name="orderQueries" ref="erpOrderQueryFactory" />
+		<property name="pageSize" value="${erp.order.pageSize}" />
+	</bean>
+
+	<alias name="defaultOrderDeliveryStatusUpdateFacade" alias="orderDeliveryStatusUpdateFacade" />
+	<bean id="defaultOrderDeliveryStatusUpdateFacade"
+		class="tasly.greathealth.erp.order.facades.DefaultOrderDeliveryStatusUpdateFacade">
+		<property name="orderService" ref="orderDeliveryStatusUpdateService" />
+		<property name="taslyOrderLineQuantityService" ref="taslyOrderLineQuantityService" />
+		<property name="createOrderSoapService" ref="createOrderSoapService" />
+		<property name="orderConverter" ref="orderConverter" />
+		<property name="converters" ref="converters" />
+		<property name="erpCodeMappingModelToDataConverter" ref="defaultErpCodeMappingReverseConverter" />
+		<property name="erpCodeMappingDataToModelConverter" ref="defaultErpCodeMappingConverter" />
+		<property name="PIUSERNAME" value="${erp.pi.username}" />
+		<property name="PIPASSWORD" value="${erp.pi.password}" />
+	</bean>
+	<!-- TS-396:hybris/OMS订单下行同步至ERP接口 END -->
+	<!-- create ECC order cronjob ST -->
+	<bean id="eccOrderCreateWorkerBean"
+		class="tasly.greathealth.erp.order.cronjob.EccOrderCreateWorkerBean">
+		<property name="updateOrderDeliveryStatusFacade" ref="orderDeliveryStatusUpdateFacade" />
+	</bean>
+
+	<bean id="eccOrderCreateJob" class="com.hybris.kernel.api.JobDetailsBean">
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+		<property name="jobParams" value="create ecc order" />
+		<property name="worker" ref="eccOrderCreateWorkerBean" />
+		<property name="registerOnStartup" value="false" />
+		<property name="scope" value="SINGLE_TENANT" />
+		<property name="tenant" value="single" />
+	</bean>
+	<!-- create ECC order cronjob END -->
+
+	<!-- add by libin539 Update Order -->
+	<alias name="defaultOrderUpdateService" alias="orderUpdateService" />
+	<bean id="defaultOrderUpdateService"
+		class="tasly.greathealth.erp.order.services.impl.DefaultOrderUpdateService">
+		<property name="orderQueries" ref="erpOrderQueryFactory" />
+	</bean>
+	<alias name="defaultUpdateOrderFacade" alias="updateOrderFacade" />
+	<bean id="defaultUpdateOrderFacade"
+		class="tasly.greathealth.erp.order.facades.DefaultUpdateOrderFacade">
+		<property name="orderUpdateService" ref="orderUpdateService" />
+		<property name="eccOrderUpdateService" ref="eccOrderUpdateService" />
+		<property name="PIUSERNAME" value="${erp.pi.username}" />
+		<property name="PIPASSWORD" value="${erp.pi.password}" />
+	</bean>
+</beans>

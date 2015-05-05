@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.hybris.com/schema/onpremise/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/onpremise/beans http://www.hybris.com/schema/onpremise/beans-5.3.xsd">
+	
+	<!-- Weng Liang TS-689[TS-752] -->
+	<!-- OMS Order Status DTO -->
+	<package name="tasly.greathealth.oms.api.orderstatus.dto">
+		<bean name="Baseinfo" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>BaseInfo DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="MSGID" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+
+			<property name="PMSGID" type="String" />
+			<property name="SENDTIME" type="String" />
+			<property name="S_SYSTEM" type="String" />
+			<property name="SERVICENAME" type="String" />
+			<property name="T_SYSTEM" type="String" />
+			<property name="RETRY" type="int" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.MSGID;
+	}
+						]]>
+			</customCode>
+		</bean>
+
+		<bean name="Oms_order" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Order DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="OMS_ORDER_ID" type="String">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlID</value>
+				</annotations>
+			</property>
+
+			<property name="OPERATION" type="String" />
+			<property name="RESULT_CODE" type="String" />
+			<property name="RESULT_MESSAGE" type="String" />
+			<property name="ECC_ORDER_ID" type="String" />
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return this.OMS_ORDER_ID;
+	}
+						]]>
+			</customCode>
+		</bean>
+
+		<bean name="Oms_orders" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Orders DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="Oms_order" type="java.util.List" generic="Oms_order"
+				initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+		<bean name="Message" extend="com.hybris.commons.dto.impl.PropertyAwareEntityDto">
+			<description>Message DTO for oms-tasly-extension</description>
+			<annotations>
+				<value>@javax.xml.bind.annotation.XmlRootElement</value>
+				<value>@javax.xml.bind.annotation.XmlAccessorType(javax.xml.bind.annotation.XmlAccessType.FIELD)</value>
+			</annotations>
+
+			<property name="Oms_orders" type="java.util.List" generic="Oms_orders"
+				initValue="new java.util.ArrayList()">
+				<annotations>
+					<value>@javax.xml.bind.annotation.XmlElement</value>
+				</annotations>
+			</property>
+
+			<customCode>
+				<![CDATA[
+	@Override
+	public String getId()
+	{
+		return null;
+	}
+						]]>
+			</customCode>
+		</bean>
+		
+	</package>
+
+</beans>

@@ -1,0 +1,23 @@
+<types xmlns="http://www.hybris.com/schema/ondemand/domain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.hybris.com/schema/ondemand/domain http://www.hybris.com/schema/ondemand/domain-1.6.xsd"
+	package="tasly.greathealth.oms.domain.principal">
+	<managedobjects>
+		<managedobject code="DataPrincipalData" properties="false">
+			<persistence name="dataPrincipals" />
+			<attributes>
+				<attribute name="uniqueid" type="String">
+					<modifiers mandatory="true" unique="true" />
+				</attribute>
+				<attribute name="isGroup" type="boolean">
+					<modifiers mandatory="true" />
+				</attribute>
+				<attribute name="group" type="String" />
+				<attribute name="principal" type="String" />
+				<attribute name="active" type="boolean" />
+			</attributes>
+			<pk>
+				<attribute name="uniqueid" />
+			</pk>
+		</managedobject>
+	</managedobjects>
+</types>

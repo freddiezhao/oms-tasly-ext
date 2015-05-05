@@ -1,0 +1,2 @@
+export CATALINA_OPTS=" -Djava.net.preferIPv4Stack=true -Xms4048m -Xmx4048m -XX:NewSize=256m -XX:MaxNewSize=356m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:-UseGCOverheadLimit "
+/opt/tomcat/bin/startup.sh
